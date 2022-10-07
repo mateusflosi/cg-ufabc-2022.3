@@ -5,6 +5,14 @@
 
 void Window::onCreate() { restartGame(); }
 
+void Window::onPaint() {
+  // Set the clear color
+  abcg::glClearColor(m_clearColor.at(0), m_clearColor.at(1), m_clearColor.at(2),
+                     m_clearColor.at(3));
+  // Clear the color buffer
+  abcg::glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Window::onPaintUI() {
   // Get size of application's window
   auto const appWindowWidth{gsl::narrow<float>(getWindowSettings().width)};
@@ -90,6 +98,7 @@ void Window::onPaintUI() {
               if (m_gameState == GameState::Bomb && ch == ' ') {
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
+                  m_clearColor = {1.f, 0.f, 0.f, 1.f};
                 } else {
                   clickButton(i, j);
                   checkWinCondition();
@@ -127,6 +136,7 @@ void Window::checkWinCondition() {
     }
   }
   m_gameState = GameState::Win;
+  m_clearColor = {0.f, 1.f, 0.f, 1.f};
 }
 
 void Window::restartGame() {
@@ -143,6 +153,7 @@ void Window::restartGame() {
   }
 
   m_gameState = GameState::Bomb;
+  m_clearColor = {0.906f, 0.910f, 0.918f, 1.0f};
 }
 
 void Window::clickButton(int i, int j) {
