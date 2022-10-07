@@ -59,6 +59,8 @@ void Window::onPaintUI() {
       ImGui::Spacing();
     }
 
+    // TODO: Botão para controlar se é bomba ou flag
+
     ImGui::Spacing();
 
     // Game board
@@ -75,7 +77,6 @@ void Window::onPaintUI() {
 
             // Get current character
             auto ch{m_board.at(offset)};
-            // TODO: Regra para analisar o que será exibido
 
             // Replace null character with whitespace because the button label
             // cannot be an empty string
@@ -91,8 +92,9 @@ void Window::onPaintUI() {
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
                 } else {
-                  // TODO: Como preencher o campo
-                  m_board.at(offset) = 'X';
+                  // TODO: Quando for 0 propagar o enter
+                  m_board.at(offset) =
+                      fmt::format("{}", getNumberBombsInPerimeter(i, j))[0];
                 }
                 // checkWinCondition();
               }
@@ -134,4 +136,20 @@ void Window::restartGame() {
   }
 
   m_gameState = GameState::Bomb;
+}
+
+int Window::getNumberBombsInPerimeter(int i, int j) {
+  int count = 0;
+  for (int a = i - 1; a <= i + 1; a++) {
+    for (int b = j - 1; b <= j + 1; b++) {
+      if (a >= 0 && a < m_N && b >= 0 && b < m_N) {
+        auto const offset{a * m_N + b};
+        auto ch{m_board.at(offset)};
+        if (ch == 'B') {
+          count++;
+        }
+      }
+    }
+  }
+  return count;
 }
