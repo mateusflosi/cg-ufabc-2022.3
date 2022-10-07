@@ -91,10 +91,9 @@ void Window::onPaintUI() {
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
                 } else {
-                  // TODO: Quando for 0 propagar o enter
                   clickButton(i, j);
+                  checkWinCondition();
                 }
-                // checkWinCondition();
               }
             }
           }
@@ -117,8 +116,18 @@ void Window::onPaintUI() {
   }
 }
 
-// TODO: Implementar função
-// void Window::checkWinCondition() { return; }
+void Window::checkWinCondition() {
+  for (auto i : iter::range(m_N)) {
+    for (auto j : iter::range(m_N)) {
+      auto const offset{i * m_N + j};
+      auto ch{m_board.at(offset)};
+      if (ch == 0) {
+        return;
+      }
+    }
+  }
+  m_gameState = GameState::Win;
+}
 
 void Window::restartGame() {
   m_board.fill('\0');

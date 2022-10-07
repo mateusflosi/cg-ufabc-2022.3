@@ -22,7 +22,7 @@ private:
    */
   std::array<char, m_N * m_N> m_board{};
 
-  // void checkWinCondition();
+  void checkWinCondition();
   void restartGame();
   void clickButton(int i, int j);
   int getNumberBombsInPerimeter(int i, int j);
