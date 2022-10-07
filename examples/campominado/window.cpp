@@ -87,14 +87,12 @@ void Window::onPaintUI() {
             // Button text is ch followed by an ID in the format ##ij
             auto buttonText{fmt::format("{}##{}{}", ch, i, j)};
             if (ImGui::Button(buttonText.c_str(), ImVec2(-1, buttonHeight))) {
-              if (m_gameState == GameState::Bomb ||
-                  m_gameState == GameState::Flag) {
+              if (m_gameState == GameState::Bomb && ch == ' ') {
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
                 } else {
                   // TODO: Quando for 0 propagar o enter
-                  m_board.at(offset) =
-                      fmt::format("{}", getNumberBombsInPerimeter(i, j))[0];
+                  clickButton(i, j);
                 }
                 // checkWinCondition();
               }
@@ -136,6 +134,23 @@ void Window::restartGame() {
   }
 
   m_gameState = GameState::Bomb;
+}
+
+void Window::clickButton(int i, int j) {
+  int offset{i * m_N + j};
+  auto const numberBombs = getNumberBombsInPerimeter(i, j);
+  m_board.at(offset) = fmt::format("{}", numberBombs)[0];
+
+  if (numberBombs == 0) {
+    for (int a = i - 1; a <= i + 1; a++) {
+      for (int b = j - 1; b <= j + 1; b++) {
+        offset = a * m_N + b;
+        if (a >= 0 && a < m_N && b >= 0 && b < m_N && m_board.at(offset) == 0) {
+          clickButton(a, b);
+        }
+      }
+    }
+  }
 }
 
 int Window::getNumberBombsInPerimeter(int i, int j) {

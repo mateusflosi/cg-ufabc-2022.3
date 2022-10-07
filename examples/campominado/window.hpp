@@ -24,6 +24,7 @@ private:
 
   // void checkWinCondition();
   void restartGame();
+  void clickButton(int i, int j);
   int getNumberBombsInPerimeter(int i, int j);
 };
 
