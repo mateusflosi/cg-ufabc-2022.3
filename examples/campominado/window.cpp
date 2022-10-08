@@ -110,13 +110,20 @@ void Window::onPaintUI() {
               button_collor = button_five;
               button_hovered = button_five;
               break;
-            case 'B':
+            case 'f':
               if (m_gameState == GameState::Lose) {
                 button_collor = button_erro;
                 button_hovered = button_erro;
-                break;
+              } else {
+                button_collor = button_flag;
+                button_hovered = button_flag;
               }
-            case 'f':
+              break;
+            case 'F':
+              button_collor = button_flag;
+              button_hovered = button_flag;
+              break;
+            case 'B':
               if (m_gameState == GameState::Lose) {
                 button_collor = button_erro;
                 button_hovered = button_erro;
