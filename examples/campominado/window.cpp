@@ -37,27 +37,6 @@ void Window::onPaintUI() {
 
     // Static text showing current turn or win/draw messages
     {
-      std::string text;
-      switch (m_gameState) {
-      case GameState::Bomb:
-        text = "Faça sua jogada";
-        break;
-      case GameState::Flag:
-        text = "Faça sua jogada";
-        break;
-      case GameState::Win:
-        text = "Você venceu";
-        break;
-      case GameState::Lose:
-        text = "Você perdeu";
-        break;
-      }
-      // Center text
-      ImGui::SetCursorPosX(
-          (appWindowWidth - ImGui::CalcTextSize(text.c_str()).x) / 2);
-      ImGui::Text("%s", text.c_str());
-      ImGui::SameLine();
-
       ImGui::PushStyleColor(ImGuiCol_Button, m_gameState == GameState::Flag
                                                  ? button_hovered_default
                                                  : button_color_default);
@@ -70,7 +49,10 @@ void Window::onPaintUI() {
                                 ? button_color_default
                                 : button_hovered_default);
 
-      if (ImGui::Button("F", ImVec2(25, 25))) {
+      ImGui::SetCursorPosX((appWindowWidth - 102) / 2);
+      ImGui::Text(fmt::format("{}", m_bombs).c_str());
+      ImGui::SameLine();
+      if (ImGui::Button("Flag", ImVec2(100, 25))) {
         if (m_gameState == GameState::Flag) {
           m_gameState = GameState::Bomb;
         } else if (m_gameState == GameState::Bomb) {
@@ -174,8 +156,10 @@ void Window::onPaintUI() {
                    m_board.at(offset) == '\0')) {
                 if (ch == 'F') {
                   m_board.at(offset) = m_board.at(offset) == 'F' ? 'B' : '\0';
-                } else {
+                  m_bombs++;
+                } else if (m_bombs > 0) {
                   m_board.at(offset) = m_board.at(offset) == 'B' ? 'F' : 'f';
+                  m_bombs--;
                 }
               }
             }
@@ -196,6 +180,19 @@ void Window::onPaintUI() {
       if (ImGui::Button("Restart game", ImVec2(-1, 50))) {
         restartGame();
       }
+    }
+
+    // Show another simple window
+    if (m_gameState == GameState::Win || m_gameState == GameState::Lose) {
+      ImGui::SetNextWindowSize(ImVec2(appWindowWidth, -1));
+      ImGui::SetNextWindowPos(ImVec2(0, appWindowHeight / 2));
+      ImGui::Begin(m_gameState == GameState::Win ? "Você venceu"
+                                                 : "Você perdeu",
+                   nullptr);
+      if (ImGui::Button("Play Again", ImVec2(-1, 25))) {
+        restartGame();
+      }
+      ImGui::End();
     }
 
     ImGui::End();
@@ -229,6 +226,7 @@ void Window::restartGame() {
   }
 
   m_gameState = GameState::Bomb;
+  m_bombs = 8;
 }
 
 void Window::clickButton(int i, int j) {

@@ -22,6 +22,7 @@ private:
   static auto const button_text = IM_COL32(0, 0, 0, 255);
 
   static int const m_N{8}; // Board size is m_N x m_N
+  int m_bombs{8};
 
   enum class GameState { Bomb, Flag, Win, Lose };
   GameState m_gameState;
