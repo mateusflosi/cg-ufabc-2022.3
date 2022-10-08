@@ -5,14 +5,6 @@
 
 void Window::onCreate() { restartGame(); }
 
-void Window::onPaint() {
-  // Set the clear color
-  abcg::glClearColor(m_clearColor.at(0), m_clearColor.at(1), m_clearColor.at(2),
-                     m_clearColor.at(3));
-  // Clear the color buffer
-  abcg::glClear(GL_COLOR_BUFFER_BIT);
-}
-
 void Window::onPaintUI() {
   // Get size of application's window
   auto const appWindowWidth{gsl::narrow<float>(getWindowSettings().width)};
@@ -86,11 +78,58 @@ void Window::onPaintUI() {
             // Get current character
             auto ch{m_board.at(offset)};
 
+            unsigned int button_collor;
+            unsigned int button_hovered;
+
+            switch (ch) {
+            case '0':
+              button_collor = button_zero;
+              button_hovered = button_zero;
+              break;
+            case '1':
+              button_collor = button_one;
+              button_hovered = button_one;
+              break;
+            case '2':
+              button_collor = button_two;
+              button_hovered = button_two;
+              break;
+            case '3':
+              button_collor = button_three;
+              button_hovered = button_three;
+              break;
+            case '4':
+              button_collor = button_four;
+              button_hovered = button_four;
+              break;
+            case '5':
+              button_collor = button_five;
+              button_hovered = button_five;
+              break;
+            case 'B':
+              if (m_gameState == GameState::Lose) {
+                button_collor = button_bomb;
+                button_hovered = button_bomb;
+                break;
+              }
+            default:
+              button_collor = button_color_default;
+              button_hovered = button_hovered_default;
+              break;
+            }
+
             // Replace null character with whitespace because the button label
             // cannot be an empty string
-            if (ch == 0 || (ch == 'B' && m_gameState != GameState::Lose)) {
+            if (ch == 0 || ch == '0' ||
+                (ch == 'B' && m_gameState != GameState::Lose)) {
               ch = ' ';
             }
+
+            ImGui::PushID(offset);
+            ImGui::PushStyleColor(ImGuiCol_Text, button_text);
+            ImGui::PushStyleColor(ImGuiCol_Button, button_collor);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, button_hovered);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, button_hovered);
 
             // Button text is ch followed by an ID in the format ##ij
             auto buttonText{fmt::format("{}##{}{}", ch, i, j)};
@@ -98,13 +137,15 @@ void Window::onPaintUI() {
               if (m_gameState == GameState::Bomb && ch == ' ') {
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
-                  m_clearColor = {1.f, 0.f, 0.f, 1.f};
                 } else {
                   clickButton(i, j);
                   checkWinCondition();
                 }
               }
             }
+
+            ImGui::PopStyleColor(4);
+            ImGui::PopID();
           }
           ImGui::Spacing();
         }
@@ -136,7 +177,6 @@ void Window::checkWinCondition() {
     }
   }
   m_gameState = GameState::Win;
-  m_clearColor = {0.f, 1.f, 0.f, 1.f};
 }
 
 void Window::restartGame() {
@@ -153,7 +193,6 @@ void Window::restartGame() {
   }
 
   m_gameState = GameState::Bomb;
-  m_clearColor = {0.906f, 0.910f, 0.918f, 1.0f};
 }
 
 void Window::clickButton(int i, int j) {
