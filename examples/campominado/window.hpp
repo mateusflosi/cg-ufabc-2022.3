@@ -25,12 +25,11 @@ private:
 
   enum class GameState { Bomb, Flag, Win, Lose };
   GameState m_gameState;
-
-  bool m_FlagSelected{false};
   /*
    * B - o quadrado tem uma boma
-   * F - o quadrado está flegado
-   * [0...9] - indica quantas bombas estão ao redor do quadrado
+   * F - o quadrado está flegado e é uma bomba
+   * f - o quadrado está flegafo e não é uma bomba
+   * [0...5] - indica quantas bombas estão ao redor do quadrado
    */
   std::array<char, m_N * m_N> m_board{};
 

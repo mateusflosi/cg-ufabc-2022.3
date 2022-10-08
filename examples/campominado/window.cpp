@@ -56,10 +56,32 @@ void Window::onPaintUI() {
       ImGui::SetCursorPosX(
           (appWindowWidth - ImGui::CalcTextSize(text.c_str()).x) / 2);
       ImGui::Text("%s", text.c_str());
+      ImGui::SameLine();
+
+      ImGui::PushStyleColor(ImGuiCol_Button, m_gameState == GameState::Flag
+                                                 ? button_hovered_default
+                                                 : button_color_default);
+      ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
+                            m_gameState == GameState::Flag
+                                ? button_color_default
+                                : button_hovered_default);
+      ImGui::PushStyleColor(ImGuiCol_ButtonActive,
+                            m_gameState == GameState::Flag
+                                ? button_color_default
+                                : button_hovered_default);
+
+      if (ImGui::Button("F", ImVec2(25, 25))) {
+        if (m_gameState == GameState::Flag) {
+          m_gameState = GameState::Bomb;
+        } else if (m_gameState == GameState::Bomb) {
+          m_gameState = GameState::Flag;
+        }
+      }
+
+      ImGui::PopStyleColor(3);
+
       ImGui::Spacing();
     }
-
-    // TODO: Botão para controlar se é bomba ou flag
 
     ImGui::Spacing();
 
@@ -125,6 +147,10 @@ void Window::onPaintUI() {
               ch = ' ';
             }
 
+            if (ch == 'f') {
+              ch = 'F';
+            }
+
             ImGui::PushID(offset);
             ImGui::PushStyleColor(ImGuiCol_Text, button_text);
             ImGui::PushStyleColor(ImGuiCol_Button, button_collor);
@@ -140,6 +166,16 @@ void Window::onPaintUI() {
                 } else {
                   clickButton(i, j);
                   checkWinCondition();
+                }
+              }
+
+              if (m_gameState == GameState::Flag &&
+                  (m_board.at(offset) == 'B' || ch == 'F' ||
+                   m_board.at(offset) == '\0')) {
+                if (ch == 'F') {
+                  m_board.at(offset) = m_board.at(offset) == 'F' ? 'B' : '\0';
+                } else {
+                  m_board.at(offset) = m_board.at(offset) == 'B' ? 'F' : 'f';
                 }
               }
             }
@@ -219,7 +255,7 @@ int Window::getNumberBombsInPerimeter(int i, int j) {
       if (a >= 0 && a < m_N && b >= 0 && b < m_N) {
         auto const offset{a * m_N + b};
         auto ch{m_board.at(offset)};
-        if (ch == 'B') {
+        if (ch == 'B' || ch == 'F') {
           count++;
         }
       }
