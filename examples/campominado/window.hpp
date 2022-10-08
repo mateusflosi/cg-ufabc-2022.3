@@ -18,7 +18,7 @@ private:
   static auto const button_three = IM_COL32(255, 207, 123, 255);
   static auto const button_four = IM_COL32(255, 183, 131, 255);
   static auto const button_five = IM_COL32(255, 95, 95, 255);
-  static auto const button_bomb = IM_COL32(255, 28, 28, 255);
+  static auto const button_erro = IM_COL32(255, 28, 28, 255);
   static auto const button_text = IM_COL32(0, 0, 0, 255);
 
   static int const m_N{8}; // Board size is m_N x m_N

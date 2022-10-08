@@ -112,8 +112,14 @@ void Window::onPaintUI() {
               break;
             case 'B':
               if (m_gameState == GameState::Lose) {
-                button_collor = button_bomb;
-                button_hovered = button_bomb;
+                button_collor = button_erro;
+                button_hovered = button_erro;
+                break;
+              }
+            case 'f':
+              if (m_gameState == GameState::Lose) {
+                button_collor = button_erro;
+                button_hovered = button_erro;
                 break;
               }
             default:
