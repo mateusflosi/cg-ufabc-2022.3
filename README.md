@@ -24,7 +24,11 @@ Mas, em questão de layout apresenta logo em cima do "Game Board" o número de b
 
 O jogo começa preenchendo o tabuleiro com caracteres vazios e depois seleciona 8 quadrados, aleatoriamente, para ser as casas com bombas.
 
+<img src="/pages/campominado/CampoMinado1.png" alt="My cool logo"/>
+
 Depois disso o jogador precisa ir pressionando os quadrados do "Gama Board" para revelar quantas bombas tem ao redor da casa pressionada. Quando o quadrado pressionado não apresentads bombas ao seu redor, o jogo, automaticamente, revela o número de bombas dos quadrados ao redor, de forma recursiva, até que seja encontrando quadrados com bombas próximas. Esse movimento é para o jogo não ficar repetitivo e chato em seu inicio. 
+
+<img src="/pages/campominado/CampoMinado2.png" alt="My cool logo"/>
 
 Quando o jogador está confiante que sabe onde estão as bombas ele pode flega-lo. O quadrado flegado quando pressionado não executa nada. Todos os quadrados podem ser flegados e desflegados em qualquer momento do jogo, contudo só pode haver 8 quadrados flegados simultaneamente.
 
