@@ -23,7 +23,6 @@ void Window::onPaintUI() {
     {
       bool restartSelected{};
       if (ImGui::BeginMenuBar()) {
-        // TODO: Adicionar tamanhos de jogo: 8x8, 16x16, 30x16
         if (ImGui::BeginMenu("Game")) {
           ImGui::MenuItem("Restart", nullptr, &restartSelected);
           ImGui::EndMenu();
@@ -35,8 +34,10 @@ void Window::onPaintUI() {
       }
     }
 
-    // Static text showing current turn or win/draw messages
+    // Revela o número de bombas que ainda tem pra identifcar e o botão
+    // para adicionar as bandeiras no tabuleiro
     {
+      // Adição de cor ao botão para saber quando o botão está ou não ativo
       ImGui::PushStyleColor(ImGuiCol_Button, m_gameState == GameState::Flag
                                                  ? button_hovered_default
                                                  : button_color_default);
@@ -50,8 +51,11 @@ void Window::onPaintUI() {
                                 : button_hovered_default);
 
       ImGui::SetCursorPosX((appWindowWidth - 102) / 2);
+
+      // adiciona o número de bombas que ainda não foram identificadas na tela
       ImGui::Text(fmt::format("{}", m_bombs).c_str());
       ImGui::SameLine();
+
       if (ImGui::Button("Flag", ImVec2(100, 25))) {
         if (m_gameState == GameState::Flag) {
           m_gameState = GameState::Bomb;
@@ -85,6 +89,7 @@ void Window::onPaintUI() {
             unsigned int button_collor;
             unsigned int button_hovered;
 
+            // verifica qual a cor do botão
             switch (ch) {
             case '0':
               button_collor = button_zero;
@@ -111,6 +116,8 @@ void Window::onPaintUI() {
               button_hovered = button_five;
               break;
             case 'f':
+              // se o quadrado está flegado, mas não é uma bomba
+              // caso o jogador perca a cor do quadrado é alterada para erro
               if (m_gameState == GameState::Lose) {
                 button_collor = button_erro;
                 button_hovered = button_erro;
@@ -124,6 +131,8 @@ void Window::onPaintUI() {
               button_hovered = button_flag;
               break;
             case 'B':
+              // caso o jogo não esteja em estado de derrota a cor da bomba fica
+              // em default
               if (m_gameState == GameState::Lose) {
                 button_collor = button_erro;
                 button_hovered = button_erro;
@@ -135,17 +144,18 @@ void Window::onPaintUI() {
               break;
             }
 
-            // Replace null character with whitespace because the button label
-            // cannot be an empty string
+            // troca de caracteres para não exibir o valor
             if (ch == 0 || ch == '0' ||
                 (ch == 'B' && m_gameState != GameState::Lose)) {
               ch = ' ';
             }
 
+            // troca de f para F
             if (ch == 'f') {
               ch = 'F';
             }
 
+            // adição de cor no botão
             ImGui::PushID(offset);
             ImGui::PushStyleColor(ImGuiCol_Text, button_text);
             ImGui::PushStyleColor(ImGuiCol_Button, button_collor);
@@ -155,7 +165,10 @@ void Window::onPaintUI() {
             // Button text is ch followed by an ID in the format ##ij
             auto buttonText{fmt::format("{}##{}{}", ch, i, j)};
             if (ImGui::Button(buttonText.c_str(), ImVec2(-1, buttonHeight))) {
+              // verifica o estado e se o quadrado está vazio
               if (m_gameState == GameState::Bomb && ch == ' ') {
+                // se B perde o jogo, senão executa a ação de revelar o número
+                // de bombas e verifica se o jogador ganhou
                 if (m_board.at(offset) == 'B') {
                   m_gameState = GameState::Lose;
                 } else {
@@ -164,13 +177,19 @@ void Window::onPaintUI() {
                 }
               }
 
+              // verifica se é para flegar o quadrado e o que está preenchido no
+              // mesmo
               if (m_gameState == GameState::Flag &&
                   (m_board.at(offset) == 'B' || ch == 'F' ||
                    m_board.at(offset) == '\0')) {
+                // se o quadrado está flegado troca para B ou '\0'
+                // se não, verifica o número de bombas faltantes e flega
                 if (ch == 'F') {
+                  // se F a casa tinha sido flegada corretamente
                   m_board.at(offset) = m_board.at(offset) == 'F' ? 'B' : '\0';
                   m_bombs++;
                 } else if (m_bombs > 0) {
+                  // verifica se o jogador identificou corretamente a bomba
                   m_board.at(offset) = m_board.at(offset) == 'B' ? 'F' : 'f';
                   m_bombs--;
                 }
@@ -195,7 +214,7 @@ void Window::onPaintUI() {
       }
     }
 
-    // Show another simple window
+    // Mostra se o jogador ganhou ou perdeu o jogo
     if (m_gameState == GameState::Win || m_gameState == GameState::Lose) {
       ImGui::SetNextWindowSize(ImVec2(appWindowWidth, -1));
       ImGui::SetNextWindowPos(ImVec2(0, appWindowHeight / 2));
@@ -230,8 +249,10 @@ void Window::restartGame() {
 
   srand(time(0));
 
+  // seleciona aleatoriamente as casas que vão ser bombas
   for (auto i : iter::range(m_N)) {
     auto offset{-1};
+    // gera casas aleatórias enquanto não encontra uma casa vazia
     do {
       offset = rand() % m_N * m_N + rand() % m_N;
     } while (m_board.at(offset) == 'B');
@@ -247,6 +268,7 @@ void Window::clickButton(int i, int j) {
   auto const numberBombs = getNumberBombsInPerimeter(i, j);
   m_board.at(offset) = fmt::format("{}", numberBombs)[0];
 
+  // se o número de bombas for 0 revela os quadrados ao redos
   if (numberBombs == 0) {
     for (int a = i - 1; a <= i + 1; a++) {
       for (int b = j - 1; b <= j + 1; b++) {
@@ -259,6 +281,7 @@ void Window::clickButton(int i, int j) {
   }
 }
 
+// verifica o número de bombas que tem ao redos do quadrado
 int Window::getNumberBombsInPerimeter(int i, int j) {
   int count = 0;
   for (int a = i - 1; a <= i + 1; a++) {
