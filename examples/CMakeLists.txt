@@ -2,4 +2,5 @@
 #add_subdirectory(firstapp)
 #add_subdirectory(tictactoe)
 #add_subdirectory(campominado)
-add_subdirectory(sierpinski)
+#add_subdirectory(sierpinski)
+add_subdirectory(coloredtriangles)
