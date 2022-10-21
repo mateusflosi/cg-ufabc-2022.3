@@ -28,6 +28,8 @@ private:
 
   GameData m_gameData;
 
+  Asteroids m_asteroids;
+  Bullets m_bullets;
   Ship m_ship;
   StarLayers m_starLayers;
 
@@ -38,6 +40,8 @@ private:
   std::default_random_engine m_randomEngine;
 
   void restart();
+  void checkCollisions();
+  void checkWinCondition();
 };
 
 #endif
