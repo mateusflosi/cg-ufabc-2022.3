@@ -45,7 +45,7 @@ void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
 
   m_player.update(m_gameData, deltaTime);
-  m_ball.update(m_gameData, deltaTime);
+  m_ball.update(deltaTime);
 }
 
 void Window::onPaint() {

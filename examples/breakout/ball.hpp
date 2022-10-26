@@ -10,12 +10,11 @@ public:
   void create(GLuint program);
   void paint(GameData const &gameData);
   void destroy();
-  void update(GameData const &gameData, float deltaTime);
+  void update(float deltaTime);
 
   glm::vec4 m_color{1};
   float m_rotation{};
   float m_scale{0.025f};
-  float m_length{7.f};
   glm::vec2 m_translation{};
   glm::vec2 m_velocity{};
 

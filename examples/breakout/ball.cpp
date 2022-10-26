@@ -18,7 +18,7 @@ void Ball::create(GLuint program) {
   // Reset Ball attributes
   m_rotation = 0.0f;
   m_translation = glm::vec2(0);
-  m_velocity = glm::vec2(0);
+  m_velocity = {0.5f, 0.5f};
 
   // Get location of attributes in the program
   auto const positionAttribute{
@@ -82,19 +82,24 @@ void Ball::destroy() {
   abcg::glDeleteVertexArrays(1, &m_VAO);
 }
 
-void Ball::update(GameData const &gameData, float deltaTime) {
-  // Desloca pra esquerda e pra direita
-  m_velocity = {0, 0};
-  if (gameData.m_input[gsl::narrow<size_t>(Input::Left)])
-    m_velocity = {-.5, 0};
-  if (gameData.m_input[gsl::narrow<size_t>(Input::Right)])
-    m_velocity = {.5, 0};
-
+void Ball::update(float deltaTime) {
   m_translation += m_velocity * deltaTime;
 
   // parede
-  if (m_translation.x < -1.0f + m_scale * (m_length / 15.5f))
-    m_translation.x = -1.0f + m_scale * (m_length / 15.5f);
-  if (m_translation.x > +1.0f - m_scale * (m_length / 15.5f))
-    m_translation.x = 1.0f - m_scale * (m_length / 15.5f);
+  if (m_translation.x < -1.0f) {
+    m_translation.x = -1.0f;
+    m_velocity = {0.5f, m_velocity[1]};
+  }
+  if (m_translation.x > +1.0f) {
+    m_translation.x = 1.0f;
+    m_velocity = {-0.5f, m_velocity[1]};
+  }
+  if (m_translation.y < -1.0f) {
+    m_translation.y = -1.0f;
+    m_velocity = {m_velocity[0], 0.5f};
+  }
+  if (m_translation.y > +1.0f) {
+    m_translation.y = 1.0f;
+    m_velocity = {m_velocity[0], -0.5f};
+  }
 }
