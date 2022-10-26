@@ -44,8 +44,6 @@ void Window::restart() {
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
 
-  fmt::print("{}\n", m_restartWaitTimer.elapsed());
-
   // Wait 5 seconds before restarting
   if (m_gameData.m_state != State::Playing &&
       m_restartWaitTimer.elapsed() > 5) {
@@ -121,6 +119,7 @@ void Window::checkCollisions() {
     ;
   }
 
+  // Check lose condition
   if (m_ball.m_translation.y < -1.0f) {
     m_gameData.m_state = State::GameOver;
     m_restartWaitTimer.restart();
