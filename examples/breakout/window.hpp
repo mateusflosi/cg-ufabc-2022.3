@@ -5,6 +5,7 @@
 
 #include "abcgOpenGL.hpp"
 
+#include "ball.hpp"
 #include "player.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -24,6 +25,7 @@ private:
 
   GameData m_gameData;
 
+  Ball m_ball;
   Player m_player;
 
   void restart();

@@ -38,18 +38,21 @@ void Window::onCreate() {
 void Window::restart() {
   m_gameData.m_state = State::Playing;
   m_player.create(m_program);
+  m_ball.create(m_program);
 }
 
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
 
   m_player.update(m_gameData, deltaTime);
+  m_ball.update(m_gameData, deltaTime);
 }
 
 void Window::onPaint() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
   m_player.paint(m_gameData);
+  m_ball.paint(m_gameData);
 }
 
 void Window::onPaintUI() {
@@ -86,4 +89,5 @@ void Window::onDestroy() {
   abcg::glDeleteProgram(m_program);
 
   m_player.destroy();
+  m_ball.destroy();
 }
