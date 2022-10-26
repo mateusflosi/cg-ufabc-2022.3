@@ -44,8 +44,21 @@ void Window::restart() {
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
 
+  fmt::print("{}\n", m_restartWaitTimer.elapsed());
+
+  // Wait 5 seconds before restarting
+  if (m_gameData.m_state != State::Playing &&
+      m_restartWaitTimer.elapsed() > 5) {
+    restart();
+    return;
+  }
+
   m_player.update(m_gameData, deltaTime);
   m_ball.update(deltaTime);
+
+  if (m_gameData.m_state == State::Playing) {
+    checkCollisions();
+  }
 }
 
 void Window::onPaint() {
@@ -90,4 +103,26 @@ void Window::onDestroy() {
 
   m_player.destroy();
   m_ball.destroy();
+}
+
+void Window::checkCollisions() {
+  // Check collision between ball and player
+  auto const distanceY{abs(m_ball.m_translation.y - m_player.m_translation.y)};
+  auto const distanceX{abs(m_ball.m_translation.x - m_player.m_translation.x)};
+
+  // TODO: Melhorar o vetor da velocidade de acordo com a posição que pegar no
+  // player
+  if (distanceY < 0.05f &&
+      distanceX < m_player.m_scale * (m_player.m_length / 15.5f)) {
+    if (m_ball.m_translation.x > m_player.m_translation.x)
+      m_ball.m_velocity = {0.5f, 0.5f};
+    else
+      m_ball.m_velocity = {-0.5f, 0.5f};
+    ;
+  }
+
+  if (m_ball.m_translation.y < -1.0f) {
+    m_gameData.m_state = State::GameOver;
+    m_restartWaitTimer.restart();
+  }
 }

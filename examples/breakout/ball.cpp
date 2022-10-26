@@ -94,10 +94,6 @@ void Ball::update(float deltaTime) {
     m_translation.x = 1.0f;
     m_velocity = {-0.5f, m_velocity[1]};
   }
-  if (m_translation.y < -1.0f) {
-    m_translation.y = -1.0f;
-    m_velocity = {m_velocity[0], 0.5f};
-  }
   if (m_translation.y > +1.0f) {
     m_translation.y = 1.0f;
     m_velocity = {m_velocity[0], -0.5f};

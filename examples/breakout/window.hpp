@@ -25,10 +25,13 @@ private:
 
   GameData m_gameData;
 
+  abcg::Timer m_restartWaitTimer;
+
   Ball m_ball;
   Player m_player;
 
   void restart();
+  void checkCollisions();
 };
 
 #endif
