@@ -6,6 +6,7 @@
 #include "abcgOpenGL.hpp"
 
 #include "ball.hpp"
+#include "blocks.hpp"
 #include "player.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -28,6 +29,7 @@ private:
   abcg::Timer m_restartWaitTimer;
 
   Ball m_ball;
+  Blocks m_blocks;
   Player m_player;
 
   void restart();

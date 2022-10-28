@@ -39,6 +39,7 @@ void Window::restart() {
   m_gameData.m_state = State::Playing;
   m_player.create(m_program);
   m_ball.create(m_program);
+  m_blocks.create(m_program);
 }
 
 void Window::onUpdate() {
@@ -64,6 +65,7 @@ void Window::onPaint() {
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
   m_player.paint(m_gameData);
   m_ball.paint(m_gameData);
+  m_blocks.paint();
 }
 
 void Window::onPaintUI() {
@@ -101,6 +103,7 @@ void Window::onDestroy() {
 
   m_player.destroy();
   m_ball.destroy();
+  m_blocks.destroy();
 }
 
 void Window::checkCollisions() {
