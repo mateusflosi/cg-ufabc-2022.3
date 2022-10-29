@@ -76,6 +76,7 @@ Blocks::Block Blocks::makeBlock(float size, glm::vec4 color) {
   block.m_translation = glm::vec2(0);
   block.m_velocity = glm::vec2(0);
   block.m_color = color;
+  block.m_size = size;
 
   // TODO: desenhar player sem positions ou indices
   // clang-format off

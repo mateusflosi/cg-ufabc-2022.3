@@ -20,6 +20,8 @@ public:
     glm::vec4 m_color{};
     float m_rotation{};
     float m_scale{1};
+    float m_size{};
+    bool m_hit{false};
     glm::vec2 m_translation{};
     glm::vec2 m_velocity{};
   };

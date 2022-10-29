@@ -57,6 +57,7 @@ void Window::onUpdate() {
 
   if (m_gameData.m_state == State::Playing) {
     checkCollisions();
+    checkWinCondition();
   }
 }
 
@@ -108,23 +109,45 @@ void Window::onDestroy() {
 
 void Window::checkCollisions() {
   // Check collision between ball and player
-  auto const distanceY{abs(m_ball.m_translation.y - m_player.m_translation.y)};
-  auto const distanceX{abs(m_ball.m_translation.x - m_player.m_translation.x)};
-
   // TODO: Melhorar o vetor da velocidade de acordo com a posição que pegar no
   // player
-  if (distanceY < 0.05f &&
-      distanceX < m_player.m_scale * (m_player.m_length / 15.5f)) {
+  if (abs(m_ball.m_translation.y - m_player.m_translation.y) < 0.05f &&
+      abs(m_ball.m_translation.x - m_player.m_translation.x) <
+          m_player.m_scale * (m_player.m_length / 15.5f)) {
     if (m_ball.m_translation.x > m_player.m_translation.x)
-      m_ball.m_velocity = {0.5f, 0.5f};
+      m_ball.m_velocity = {m_ball.m_velocity_value, m_ball.m_velocity_value};
     else
-      m_ball.m_velocity = {-0.5f, 0.5f};
-    ;
+      m_ball.m_velocity = {-m_ball.m_velocity_value, m_ball.m_velocity_value};
   }
+  // Check collision between ball and blocks
+  for (auto &block : m_blocks.m_blocks) {
+    auto const distanceY = abs(m_ball.m_translation.y - block.m_translation.y);
+    auto const distanceX = abs(m_ball.m_translation.x - block.m_translation.x);
+    auto const diferençaY = abs(distanceY - .12f);
+    auto const diferençaX = abs(distanceX - block.m_size / 2 - .02f);
+
+    if (distanceY < .12f && distanceX < block.m_size / 2 + .02f) {
+      block.m_hit = true;
+
+      if (diferençaX < diferençaY)
+        m_ball.m_velocity = {-m_ball.m_velocity[0], m_ball.m_velocity[1]};
+      else
+        m_ball.m_velocity = {m_ball.m_velocity[0], -m_ball.m_velocity[1]};
+    }
+  }
+
+  m_blocks.m_blocks.remove_if([](auto const &a) { return a.m_hit; });
 
   // Check lose condition
   if (m_ball.m_translation.y < -1.0f) {
     m_gameData.m_state = State::GameOver;
+    m_restartWaitTimer.restart();
+  }
+}
+
+void Window::checkWinCondition() {
+  if (m_blocks.m_blocks.empty()) {
+    m_gameData.m_state = State::Win;
     m_restartWaitTimer.restart();
   }
 }

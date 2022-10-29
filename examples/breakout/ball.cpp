@@ -18,7 +18,7 @@ void Ball::create(GLuint program) {
   // Reset Ball attributes
   m_rotation = 0.0f;
   m_translation = glm::vec2(0);
-  m_velocity = {0.5f, 0.5f};
+  m_velocity = {m_velocity_value, m_velocity_value};
 
   // Get location of attributes in the program
   auto const positionAttribute{
@@ -86,16 +86,16 @@ void Ball::update(float deltaTime) {
   m_translation += m_velocity * deltaTime;
 
   // parede
-  if (m_translation.x < -1.0f) {
-    m_translation.x = -1.0f;
-    m_velocity = {0.5f, m_velocity[1]};
+  if (m_translation.x < -0.98f) {
+    m_translation.x = -0.98f;
+    m_velocity = {m_velocity_value, m_velocity[1]};
   }
-  if (m_translation.x > +1.0f) {
-    m_translation.x = 1.0f;
-    m_velocity = {-0.5f, m_velocity[1]};
+  if (m_translation.x > +0.98f) {
+    m_translation.x = 0.98f;
+    m_velocity = {-m_velocity_value, m_velocity[1]};
   }
-  if (m_translation.y > +1.0f) {
-    m_translation.y = 1.0f;
-    m_velocity = {m_velocity[0], -0.5f};
+  if (m_translation.y > +0.98f) {
+    m_translation.y = 0.98f;
+    m_velocity = {m_velocity[0], -m_velocity_value};
   }
 }
