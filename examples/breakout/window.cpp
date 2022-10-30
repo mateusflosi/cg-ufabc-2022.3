@@ -19,6 +19,7 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onCreate() {
   auto const assetsPath{abcg::Application::getAssetsPath()};
 
+  // Load a new font
   auto const filename{assetsPath + "Inconsolata-Medium.ttf"};
   m_font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 60.0f);
   if (m_font == nullptr) {
@@ -46,7 +47,7 @@ void Window::restart() {
   m_player.create(m_program);
   m_ball.create(m_program);
   m_blocks.create(m_program);
-  m_nivel = 1;
+  m_nivel = 1; // volta o nivel para 1
 }
 
 void Window::onUpdate() {
@@ -120,6 +121,8 @@ void Window::checkCollisions() {
   if (abs(m_ball.m_translation.y - m_player.m_translation.y) < 0.05f &&
       abs(m_ball.m_translation.x - m_player.m_translation.x) <
           m_player.m_scale * (m_player.m_length / 15.5f)) {
+    // verifica em qual lado do player a bola bateu, para direcionar o vetor de
+    // velocidade
     if (m_ball.m_translation.x > m_player.m_translation.x)
       m_ball.m_velocity = {m_ball.m_velocity_value, m_ball.m_velocity_value};
     else
@@ -133,6 +136,8 @@ void Window::checkCollisions() {
     if (distanceY < .12f && distanceX < block.m_size / 2 + .02f) {
       block.m_hit = true;
 
+      // verifica se o nivel do bloco é outro, se sim aumenta a velocidade da
+      // bola
       if (block.m_nivel > m_nivel) {
         m_ball.m_velocity_value += 0.3;
         m_nivel++;
@@ -149,12 +154,13 @@ void Window::checkCollisions() {
         velocityY *= -1;
       m_ball.m_velocity = {velocityX, velocityY};
       m_blocks.m_blocks.remove_if([](auto const &a) { return a.m_hit; });
+      // verifica se ainda há blocos para ser destruido
       checkWinCondition();
       break;
     }
   }
 
-  // Check lose condition
+  // Verifica se a bola entrou em contato com a parede inferior
   if (m_ball.m_translation.y < -1.0f) {
     m_gameData.m_state = State::GameOver;
     m_restartWaitTimer.restart();

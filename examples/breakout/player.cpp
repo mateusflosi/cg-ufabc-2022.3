@@ -19,6 +19,7 @@ void Player::create(GLuint program) {
   m_translation = glm::vec2(0);
   m_velocity = glm::vec2(0);
 
+  // clang-format on
   std::array positions{
       glm::vec2{m_length, +.5f},
       glm::vec2{-m_length, +.5f},
@@ -32,7 +33,6 @@ void Player::create(GLuint program) {
   }
 
   std::array const indices{0, 2, 3, 0, 1, 3};
-  // clang-format on
 
   // Generate VBO
   abcg::glGenBuffers(1, &m_VBO);
@@ -88,6 +88,7 @@ void Player::paint(const GameData &gameData) {
 
   abcg::glUseProgram(0);
 
+  // posição em y do player
   m_translation.y = -0.85f;
 }
 
@@ -107,7 +108,7 @@ void Player::update(GameData const &gameData, float deltaTime) {
 
   m_translation += m_velocity * deltaTime;
 
-  // parede
+  // contato com a parede
   if (m_translation.x < -1.0f + m_scale * (m_length / 15.5f))
     m_translation.x = -1.0f + m_scale * (m_length / 15.5f);
   if (m_translation.x > +1.0f - m_scale * (m_length / 15.5f))

@@ -14,19 +14,20 @@ void Blocks::create(GLuint program) {
   m_scaleLoc = abcg::glGetUniformLocation(m_program, "scale");
   m_translationLoc = abcg::glGetUniformLocation(m_program, "translation");
 
-  // Create asteroids
+  // Create blocks
   m_blocks.clear();
   m_blocks.resize(m_lines * m_blocks_per_line);
   auto &re{m_randomEngine}; // Shortcut
 
-  // auto aux{-1.f};
   auto block = m_blocks.begin();
+  // linhas
   for (auto i : iter::range(m_lines)) {
     auto aux{-1.f};
     auto y{0.25f + i * (0.22f)};
     auto color = i == 0   ? first_line_color
                  : i == 1 ? second_line_color
                           : third_line_color;
+    // blocos
     for (auto j : iter::range(m_blocks_per_line)) {
       auto size{m_randomDist(re)};
 
@@ -71,7 +72,7 @@ void Blocks::destroy() {
 Blocks::Block Blocks::makeBlock(float size, glm::vec4 color, int nivel) {
   Block block;
 
-  // Reset Player attributes
+  // Reset Block attributes
   block.m_rotation = 0.0f;
   block.m_translation = glm::vec2(0);
   block.m_velocity = glm::vec2(0);

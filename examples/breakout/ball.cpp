@@ -87,7 +87,7 @@ void Ball::update(float deltaTime) {
   float velocityX{m_velocity[0] > 0 ? m_velocity_value : -m_velocity_value};
   float velocityY(m_velocity[1] > 0 ? m_velocity_value : -m_velocity_value);
 
-  // parede
+  // contato com a parede
   if (m_translation.x < -0.98f) {
     m_translation.x = -0.98f;
     velocityX = m_velocity_value;
