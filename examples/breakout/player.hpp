@@ -19,9 +19,6 @@ public:
   glm::vec2 m_translation{};
   glm::vec2 m_velocity{};
 
-  abcg::Timer m_trailBlinkTimer;
-  abcg::Timer m_bulletCoolDownTimer;
-
 private:
   GLuint m_program{};
   GLint m_translationLoc{};

@@ -3,7 +3,6 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-// TODO: Refatoração no código
 void Player::create(GLuint program) {
   destroy();
 
@@ -20,21 +19,20 @@ void Player::create(GLuint program) {
   m_translation = glm::vec2(0);
   m_velocity = glm::vec2(0);
 
-  // TODO: desenhar player sem positions ou indices
-  // clang-format off
   std::array positions{
-      glm::vec2{m_length, +.5f}, glm::vec2{-m_length, +.5f},
-      glm::vec2{m_length, -.5f}, glm::vec2{-m_length, -.5f},
-      };
+      glm::vec2{m_length, +.5f},
+      glm::vec2{-m_length, +.5f},
+      glm::vec2{m_length, -.5f},
+      glm::vec2{-m_length, -.5f},
+  };
 
   // Normalize
   for (auto &position : positions) {
     position /= glm::vec2{15.5f, 15.5f};
   }
 
-  std::array const indices{0, 2, 3,
-                           0, 1, 3};
-  // clang-format on                           
+  std::array const indices{0, 2, 3, 0, 1, 3};
+  // clang-format on
 
   // Generate VBO
   abcg::glGenBuffers(1, &m_VBO);
@@ -72,7 +70,8 @@ void Player::create(GLuint program) {
 }
 
 void Player::paint(const GameData &gameData) {
-  if (gameData.m_state != State::Playing) return;
+  if (gameData.m_state != State::Playing)
+    return;
 
   abcg::glUseProgram(m_program);
 
@@ -82,16 +81,13 @@ void Player::paint(const GameData &gameData) {
   abcg::glUniform1f(m_rotationLoc, m_rotation);
   abcg::glUniform2fv(m_translationLoc, 1, &m_translation.x);
 
-  // Restart thruster blink timer every 100 ms
-  if (m_trailBlinkTimer.elapsed() > 100.0 / 1000.0) m_trailBlinkTimer.restart();
-
   abcg::glUniform4fv(m_colorLoc, 1, &m_color.r);
   abcg::glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);
 
   abcg::glUseProgram(0);
-  
+
   m_translation.y = -0.85f;
 }
 
@@ -109,11 +105,11 @@ void Player::update(GameData const &gameData, float deltaTime) {
   if (gameData.m_input[gsl::narrow<size_t>(Input::Right)])
     m_velocity = {1, 0};
 
-  m_translation += m_velocity*deltaTime;
+  m_translation += m_velocity * deltaTime;
 
   // parede
-    if (m_translation.x < -1.0f + m_scale*(m_length/15.5f))
-      m_translation.x = -1.0f + m_scale*(m_length/15.5f);
-    if (m_translation.x > +1.0f - m_scale*(m_length/15.5f))
-      m_translation.x = 1.0f - m_scale*(m_length/15.5f);
+  if (m_translation.x < -1.0f + m_scale * (m_length / 15.5f))
+    m_translation.x = -1.0f + m_scale * (m_length / 15.5f);
+  if (m_translation.x > +1.0f - m_scale * (m_length / 15.5f))
+    m_translation.x = 1.0f - m_scale * (m_length / 15.5f);
 }

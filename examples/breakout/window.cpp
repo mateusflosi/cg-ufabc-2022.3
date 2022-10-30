@@ -117,8 +117,6 @@ void Window::onDestroy() {
 
 void Window::checkCollisions() {
   // Check collision between ball and player
-  // TODO: Melhorar o vetor da velocidade de acordo com a posição que pegar no
-  // player
   if (abs(m_ball.m_translation.y - m_player.m_translation.y) < 0.05f &&
       abs(m_ball.m_translation.x - m_player.m_translation.x) <
           m_player.m_scale * (m_player.m_length / 15.5f)) {

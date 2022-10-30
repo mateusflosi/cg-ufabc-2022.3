@@ -79,7 +79,6 @@ Blocks::Block Blocks::makeBlock(float size, glm::vec4 color, int nivel) {
   block.m_size = size;
   block.m_nivel = nivel;
 
-  // TODO: desenhar player sem positions ou indices
   // clang-format off
   std::array positions{
       glm::vec2{size/2, +.1f}, glm::vec2{-size/2, +.1f},

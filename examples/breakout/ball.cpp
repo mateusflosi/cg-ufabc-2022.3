@@ -3,7 +3,6 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-// TODO: Refatoração no código
 void Ball::create(GLuint program) {
   destroy();
 
