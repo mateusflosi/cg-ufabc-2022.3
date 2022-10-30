@@ -1,37 +1,53 @@
-# Campo Minado
+# Breakout
 
 Mateus Flosi Molero - 11201811546
 
-### Regras do jogo
+## Regras do jogo
 
-Um jogo muito conhecido que possui regras simples, mas mesmo assim pode ser muito diverdido.
+Um clássico do Atari que foi lançado em 1976, que mesmo passados quase 50 anos do seu lançamento continua diverdindo pessoas de todas as idades, seja aquelas que jogaram o jogo no próprio Atari, quanto aquelas que nem sequer tiveram o console.
 
-O jogador precisa identificar quais quadrados estão com bombas. No começo do jogo ele precisa pressionar um quadrado no escuro, mas depois disso os quadrados irão revelar quantas bombas tem ao seu redor.
+As ações do jogador são muito simples, ele precisa mexer a barra que fica na parte inferior das telas para esquerda/direita para rebater a bola que se movimenta pela tela de jogo. A bola, por sua vez, destroem os blocos, que ficam na parte intermediária da tela, quando entram em contato com os mesmos.
 
-Quando o jogador se sentir confiante ele pode marcar um quadrado como bomba, para isso basta pressionar o botão no topo do tabuleiro.
+Dessa forma, a missão do jogador é muito simples, destruir todos os blocos da tela e não permitir que a bola atinja a parede inferior.
 
-Quando o jogador pressiona um quadrado com bomba ele perde o jogo, e, consequentemente, quando ele consegue revelar todos os quadrados, menos as bombas, ele vence o jogo.
+O jogo pode ser visualizado através do link abaixo, contudo estranhamente os objetos do jogador e os blocos ficaram transparentes na sua versão Web, mas é possível reparar que há interações. Alguns ajustes foram feitos na expectativa de corrigir esse bug, contudo nenhuma teve efeito positivo.
 
-O jogo pode ser acessado no link abaixo:
+https://mateusflosi.github.io/cg-ufabc-2022.3/pages/breakout/
 
-https://mateusflosi.github.io/cg-ufabc-2022.3/pages/campominado/
+Por conta desse motivo, um vídeo no youtube está disponibilizado no link abaixo, para que o seu funcionamento esperado possa ser visto de forma mais prática, sem a necessidade de buildar e rodar o projeto:
 
-### Implementação
+Link do video no youtube.
 
-O jogo foi feito com base no exemplo "TicTacToe" visto em aula, com um Menu que pode reiniciar o jogo no topo da aplicação, um "Game Board" e um botão de "Restart" na parte inferior da tela.
+## Implementação
 
-Mas, em questão de layout apresenta logo em cima do "Game Board" o número de bombas que ainda não foram identificadas e o botão de "Flag" que pode ser usado pelo jogador quando ele quiser marcar um quadrado como bomba. Além disso, quando o jogador ganha, ou perde, uma nova janela é exibida no meio da aplicação.
+O jogo teve como base o projeto de "Asteroids" visto em aula, como, por exemplo, a organização e arquitetura do projeto. Uma imagem do jogo pode ser visualizado a seguir:
 
-O jogo começa preenchendo o tabuleiro com caracteres vazios e depois seleciona 8 quadrados, aleatoriamente, para ser as casas com bombas.
+<img src="/pages/breakout/Breakout.png" alt="My cool logo"/>
 
-<img src="/pages/campominado/CampoMinado1.png" alt="My cool logo"/>
+O jogo apresenta, basicamente, 3 tipos de componentes: Player, Block e Ball.
 
-Depois disso o jogador precisa ir pressionando os quadrados do "Gama Board" para revelar quantas bombas tem ao redor da casa pressionada. Quando o quadrado pressionado não apresentads bombas ao seu redor, o jogo, automaticamente, revela o número de bombas dos quadrados ao redor, de forma recursiva, até que seja encontrando quadrados com bombas próximas. Esse movimento é para o jogo não ficar repetitivo e chato em seu inicio. 
+### Player
 
-<img src="/pages/campominado/CampoMinado2.png" alt="My cool logo"/>
+Esse é o único objeto que o jogador consegue interagir, sendo deslocado para esquerda ou direita dependendo da tecla que está apertada pelo usuário.
 
-Quando o jogador está confiante que sabe onde estão as bombas ele pode flega-lo. O quadrado flegado quando pressionado não executa nada. Todos os quadrados podem ser flegados e desflegados em qualquer momento do jogo, contudo só pode haver 8 quadrados flegados simultaneamente.
+Ele foi constrúido com 4 pontos e 2 triângulos, o que formou um retangulo.
 
-Caso o jogador perca o jogo, todas as bombas são reveladas, exceto aqueles que já haviam sido identifcadas. Além disso, caso o jogador tenha flegado uma quadrado equivocadamente também é dado um feedback.
+### Block
+
+Os blocos podem ser considerados os "vilões" do jogo, uma vez que o jogador precisa destroir todos eles se quiser sair vitorioso.
+
+A largura dos blocos são gerados aleatoriamente entre 0.20f e 0.25f, com excessão do último, cujo tamanho é calculado para que as fileiras fiquem alinhadas.
+
+Podemos dividir os blocos em 3 níveis, o mais baixo (verde), o intermediário (laranja) e o mais alto (vermelho).
+
+### Ball
+
+Esse é, talvez, o objeto mais importante do jogo. A bola interage com todos os objetos da tela, o que incluem os próprios blocos e o player, como também com todos os limites da tela.
+
+A bola muda de direção sempre que entra em contato com algum objeto do jogo, quer dizer, quase todos, uma vez que o jogador perde quando permite que a bola entre em contato com a parede inferior.
+
+Ela troca o sentido em x ao entrar em contato com as laterais dos blocos, como também ao colidir com paredes da esquerda e da direita. Consequentemente, troca o sentido em y ao entrar em contato com a parede superior e também com a parte de cima e de baixo dos blocos.
+
+Quando a bola entra em contato com os níveis mais altos, laranja e vermelho, pela primeira vez, sua velocidade é aumentada.
 
 Demais comentários e explicações da implmenetação podem ser encontrados no próprio código.
