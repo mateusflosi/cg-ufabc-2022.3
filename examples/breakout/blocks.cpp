@@ -51,8 +51,7 @@ void Blocks::paint() {
     abcg::glUniform1f(m_rotationLoc, block.m_rotation);
     abcg::glUniform2fv(m_translationLoc, 1, &block.m_translation.x);
 
-    abcg::glUniform4f(m_colorLoc, block.m_color[0], block.m_color[1],
-                      block.m_color[2], 1);
+    abcg::glUniform4fv(m_colorLoc, 1, &block.m_color.r);
     abcg::glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr);
 
     abcg::glBindVertexArray(0);

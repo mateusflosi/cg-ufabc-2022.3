@@ -81,7 +81,7 @@ void Player::paint(const GameData &gameData) {
   abcg::glUniform1f(m_rotationLoc, m_rotation);
   abcg::glUniform2fv(m_translationLoc, 1, &m_translation.x);
 
-  abcg::glUniform4f(m_colorLoc, 1, 1, 1, 1);
+  abcg::glUniform4fv(m_colorLoc, 1, &m_color.r);
   abcg::glDrawElements(GL_TRIANGLES, 12 * 3, GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);

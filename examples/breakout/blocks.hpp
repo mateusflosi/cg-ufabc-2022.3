@@ -41,9 +41,9 @@ private:
   auto static const m_lines{3};
   auto static const m_blocks_per_line{8};
 
-  glm::vec4 const first_line_color{0, 1, 0, 0};
-  glm::vec4 const second_line_color{1, 0.65, 0, 0};
-  glm::vec4 const third_line_color{1, 0.16, 0, 0};
+  glm::vec4 const first_line_color{0, 1, 0, 1};
+  glm::vec4 const second_line_color{1, 0.65, 0, 1};
+  glm::vec4 const third_line_color{1, 0.16, 0, 1};
 
   std::default_random_engine m_randomEngine;
   std::uniform_real_distribution<float> m_randomDist{0.20f, 0.25f};

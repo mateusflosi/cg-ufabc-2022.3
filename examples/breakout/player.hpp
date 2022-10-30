@@ -12,6 +12,7 @@ public:
   void destroy();
   void update(GameData const &gameData, float deltaTime);
 
+  glm::vec4 m_color{1};
   float m_rotation{};
   float m_scale{0.75f};
   float m_length{7.f};
