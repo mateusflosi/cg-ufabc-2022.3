@@ -138,10 +138,16 @@ void Window::checkCollisions() {
         m_nivel++;
       }
 
+      float velocityX{m_ball.m_velocity[0] > 0 ? m_ball.m_velocity_value
+                                               : -m_ball.m_velocity_value};
+      float velocityY(m_ball.m_velocity[1] > 0 ? m_ball.m_velocity_value
+                                               : -m_ball.m_velocity_value);
+
       if (abs(distanceX - block.m_size / 2 - .02f) < abs(distanceY - .12f))
-        m_ball.m_velocity = {-m_ball.m_velocity[0], m_ball.m_velocity[1]};
+        velocityX *= -1;
       else
-        m_ball.m_velocity = {m_ball.m_velocity[0], -m_ball.m_velocity[1]};
+        velocityY *= -1;
+      m_ball.m_velocity = {velocityX, velocityY};
       m_blocks.m_blocks.remove_if([](auto const &a) { return a.m_hit; });
       checkWinCondition();
       break;

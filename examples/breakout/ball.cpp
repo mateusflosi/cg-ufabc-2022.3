@@ -84,18 +84,22 @@ void Ball::destroy() {
 
 void Ball::update(float deltaTime) {
   m_translation += m_velocity * deltaTime;
+  float velocityX{m_velocity[0] > 0 ? m_velocity_value : -m_velocity_value};
+  float velocityY(m_velocity[1] > 0 ? m_velocity_value : -m_velocity_value);
 
   // parede
   if (m_translation.x < -0.98f) {
     m_translation.x = -0.98f;
-    m_velocity = {m_velocity_value, m_velocity[1]};
+    velocityX = m_velocity_value;
   }
   if (m_translation.x > +0.98f) {
     m_translation.x = 0.98f;
-    m_velocity = {-m_velocity_value, m_velocity[1]};
+    velocityX = -m_velocity_value;
   }
   if (m_translation.y > +0.98f) {
     m_translation.y = 0.98f;
-    m_velocity = {m_velocity[0], -m_velocity_value};
+    velocityY = -m_velocity_value;
   }
+
+  m_velocity = {velocityX, velocityY};
 }
