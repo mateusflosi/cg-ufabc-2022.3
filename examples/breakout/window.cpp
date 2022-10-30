@@ -19,6 +19,12 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onCreate() {
   auto const assetsPath{abcg::Application::getAssetsPath()};
 
+  auto const filename{assetsPath + "Inconsolata-Medium.ttf"};
+  m_font = ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), 60.0f);
+  if (m_font == nullptr) {
+    throw abcg::RuntimeError("Cannot load font file");
+  }
+
   // Create program to render the other objects
   m_program =
       abcg::createOpenGLProgram({{.source = assetsPath + "objects.vert",
@@ -82,6 +88,7 @@ void Window::onPaintUI() {
                                  ImGuiWindowFlags_NoTitleBar |
                                  ImGuiWindowFlags_NoInputs};
     ImGui::Begin(" ", nullptr, flags);
+    ImGui::PushFont(m_font);
 
     if (m_gameData.m_state == State::GameOver) {
       ImGui::Text("Game Over!");
@@ -89,6 +96,7 @@ void Window::onPaintUI() {
       ImGui::Text("*You Win!*");
     }
 
+    ImGui::PopFont();
     ImGui::End();
   }
 }

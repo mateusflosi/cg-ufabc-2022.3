@@ -28,6 +28,7 @@ private:
   int m_nivel{1};
 
   abcg::Timer m_restartWaitTimer;
+  ImFont *m_font{};
 
   Ball m_ball;
   Blocks m_blocks;
