@@ -40,6 +40,7 @@ void Window::restart() {
   m_player.create(m_program);
   m_ball.create(m_program);
   m_blocks.create(m_program);
+  m_nivel = 1;
 }
 
 void Window::onUpdate() {
@@ -57,7 +58,6 @@ void Window::onUpdate() {
 
   if (m_gameData.m_state == State::Playing) {
     checkCollisions();
-    checkWinCondition();
   }
 }
 
@@ -123,20 +123,24 @@ void Window::checkCollisions() {
   for (auto &block : m_blocks.m_blocks) {
     auto const distanceY = abs(m_ball.m_translation.y - block.m_translation.y);
     auto const distanceX = abs(m_ball.m_translation.x - block.m_translation.x);
-    auto const diferençaY = abs(distanceY - .12f);
-    auto const diferençaX = abs(distanceX - block.m_size / 2 - .02f);
 
     if (distanceY < .12f && distanceX < block.m_size / 2 + .02f) {
       block.m_hit = true;
 
-      if (diferençaX < diferençaY)
+      if (block.m_nivel > m_nivel) {
+        m_ball.m_velocity_value += 0.3;
+        m_nivel++;
+      }
+
+      if (abs(distanceX - block.m_size / 2 - .02f) < abs(distanceY - .12f))
         m_ball.m_velocity = {-m_ball.m_velocity[0], m_ball.m_velocity[1]};
       else
         m_ball.m_velocity = {m_ball.m_velocity[0], -m_ball.m_velocity[1]};
+      m_blocks.m_blocks.remove_if([](auto const &a) { return a.m_hit; });
+      checkWinCondition();
+      break;
     }
   }
-
-  m_blocks.m_blocks.remove_if([](auto const &a) { return a.m_hit; });
 
   // Check lose condition
   if (m_ball.m_translation.y < -1.0f) {

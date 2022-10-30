@@ -33,7 +33,7 @@ void Blocks::create(GLuint program) {
       if (j == m_blocks_per_line - 1)
         size = 0.96 - aux;
 
-      *block = makeBlock(size, color);
+      *block = makeBlock(size, color, i + 1);
       block->m_translation = {aux + size / 2 + 0.02f, y};
       aux += size + 0.02f;
       ++block;
@@ -68,7 +68,7 @@ void Blocks::destroy() {
   }
 }
 
-Blocks::Block Blocks::makeBlock(float size, glm::vec4 color) {
+Blocks::Block Blocks::makeBlock(float size, glm::vec4 color, int nivel) {
   Block block;
 
   // Reset Player attributes
@@ -77,6 +77,7 @@ Blocks::Block Blocks::makeBlock(float size, glm::vec4 color) {
   block.m_velocity = glm::vec2(0);
   block.m_color = color;
   block.m_size = size;
+  block.m_nivel = nivel;
 
   // TODO: desenhar player sem positions ou indices
   // clang-format off

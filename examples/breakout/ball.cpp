@@ -16,6 +16,7 @@ void Ball::create(GLuint program) {
   m_translationLoc = abcg::glGetUniformLocation(m_program, "translation");
 
   // Reset Ball attributes
+  m_velocity_value = 0.5f;
   m_rotation = 0.0f;
   m_translation = glm::vec2(0);
   m_velocity = {m_velocity_value, m_velocity_value};

@@ -105,9 +105,9 @@ void Player::update(GameData const &gameData, float deltaTime) {
   // Desloca pra esquerda e pra direita
   m_velocity = {0, 0};
   if (gameData.m_input[gsl::narrow<size_t>(Input::Left)])
-    m_velocity = {-.5, 0};
+    m_velocity = {-1, 0};
   if (gameData.m_input[gsl::narrow<size_t>(Input::Right)])
-    m_velocity = {.5, 0};
+    m_velocity = {1, 0};
 
   m_translation += m_velocity*deltaTime;
 

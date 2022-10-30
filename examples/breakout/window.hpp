@@ -25,6 +25,7 @@ private:
   GLuint m_program{};
 
   GameData m_gameData;
+  int m_nivel{1};
 
   abcg::Timer m_restartWaitTimer;
 

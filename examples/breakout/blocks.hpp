@@ -22,13 +22,14 @@ public:
     float m_scale{1};
     float m_size{};
     bool m_hit{false};
+    int m_nivel{};
     glm::vec2 m_translation{};
     glm::vec2 m_velocity{};
   };
 
   std::list<Block> m_blocks;
 
-  Block makeBlock(float size, glm::vec4 color);
+  Block makeBlock(float size, glm::vec4 color, int nivel);
 
 private:
   GLuint m_program{};
