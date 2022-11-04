@@ -16,7 +16,7 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/breakout/
 
 Por conta desse motivo, um vídeo no youtube está disponibilizado no link abaixo, para que o seu funcionamento esperado possa ser visto de forma mais prática, sem a necessidade de buildar e rodar o projeto:
 
-Link do video no youtube.
+https://youtu.be/NhFhkjGo7aM
 
 ## Implementação
 
