@@ -7,4 +7,5 @@
 #add_subdirectory(regularpolygons)
 #add_subdirectory(asteroids)
 #add_subdirectory(breakout)
-add_subdirectory(loadmodel)
+#add_subdirectory(loadmodel)
+add_subdirectory(lookat)
