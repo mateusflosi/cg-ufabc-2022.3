@@ -1,5 +1,7 @@
 #include "planet.hpp"
 
+#include <unordered_map>
+
 // Explicit specialization of std::hash for Vertex
 template <> struct std::hash<VertexPlanet> {
   size_t operator()(VertexPlanet const &vertexPlanet) const noexcept {
