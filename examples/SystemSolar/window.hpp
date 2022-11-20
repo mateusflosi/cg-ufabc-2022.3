@@ -4,16 +4,7 @@
 #include "abcgOpenGL.hpp"
 
 #include "camera.hpp"
-#include "ground.hpp"
-#include "sun.hpp"
-#include "earth.hpp"
-#include "mercury.hpp"
-#include "venus.hpp"
-#include "mars.hpp"
-#include "jupiter.hpp"
-#include "saturn.hpp"
-#include "uranus.hpp"
-#include "neptune.hpp"
+#include "planet.hpp"
 
 struct Vertex {
   glm::vec3 position;
@@ -49,21 +40,7 @@ private:
   float m_truckSpeed{};
   float m_panSpeed{};
 
-  Ground m_ground;
-  Sun m_sun;
-  Earth m_earth;
-  Mercury m_mercury;
-  Venus m_venus;
-  Mars m_mars;
-  Jupiter m_jupiter;
-  Saturn m_saturn;
-  Uranus m_uranus;
-  Neptune m_neptune;
-  
-  std::vector<Vertex> m_vertices;
-  std::vector<GLuint> m_indices;
-
-  void loadModelFromFile(std::string_view path);
+  std::vector<Planet> m_planets;
 };
 
 #endif

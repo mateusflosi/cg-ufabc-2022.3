@@ -61,112 +61,82 @@ void Window::onCreate() {
                                  {.source = assetsPath + "lookat.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
 
-  m_ground.create(m_program);
-  m_sun.create(m_program);
-  m_earth.create(m_program);
-  m_mercury.create(m_program);
-  m_venus.create(m_program);
-  m_mars.create(m_program);
-  m_jupiter.create(m_program);
-  m_saturn.create(m_program);
-  m_uranus.create(m_program);
-  m_neptune.create(m_program);
+  // create sun
+  auto sun = new Planet();
+  sun->m_scale = glm::vec3(0.1f);
+  sun->m_color = glm::vec4(1.0f, 0.25f, 0.25f, 1.0f);
+  sun->create(m_program, "Sun.obj");
+  m_planets.push_back(*sun);
+
+  // create mercurio
+  auto mercurio = new Planet();
+  mercurio->m_translate = glm::vec3(2.0f, 0.0f, 2.0f);
+  mercurio->m_scale = glm::vec3(0.025f);
+  mercurio->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
+  mercurio->create(m_program, "Sun.obj");
+  m_planets.push_back(*mercurio);
+
+  // create venus
+  auto venus = new Planet();
+  venus->m_translate = glm::vec3(4.0f, 0.0f, 4.0f);
+  venus->m_scale = glm::vec3(0.04f);
+  venus->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
+  venus->create(m_program, "Sun.obj");
+  m_planets.push_back(*venus);
+
+  // create eart
+  auto earth = new Planet();
+  earth->m_translate = glm::vec3(6.0f, 0.0f, 6.0f);
+  earth->m_scale = glm::vec3(0.07f);
+  earth->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
+  earth->create(m_program, "earth_new.obj");
+  m_planets.push_back(*earth);
+
+  // create mars
+  auto mars = new Planet();
+  mars->m_translate = glm::vec3(8.0f, 0.0f, 8.0f);
+  mars->m_scale = glm::vec3(0.07f);
+  mars->m_color = glm::vec4(1.0f, 0.25f, 0.25f, 1.0f);
+  mars->create(m_program, "Sun.obj");
+  m_planets.push_back(*mars);
+
+  // create jupiter
+  auto jupiter = new Planet();
+  jupiter->m_translate = glm::vec3(10.0f, 0.0f, 10.0f);
+  jupiter->m_scale = glm::vec3(0.1f);
+  jupiter->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
+  jupiter->create(m_program, "Sun.obj");
+  m_planets.push_back(*jupiter);
+
+  // create saturn
+  auto saturn = new Planet();
+  saturn->m_translate = glm::vec3(12.0f, 0.0f, 12.0f);
+  saturn->m_scale = glm::vec3(0.085f);
+  saturn->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
+  saturn->create(m_program, "Sun.obj");
+  m_planets.push_back(*saturn);
+
+  // create uranus
+  auto uranus = new Planet();
+  uranus->m_translate = glm::vec3(14.0f, 0.0f, 14.0f);
+  uranus->m_scale = glm::vec3(0.055f);
+  uranus->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
+  uranus->create(m_program, "Sun.obj");
+  m_planets.push_back(*uranus);
+
+  // create neptune
+  auto neptune = new Planet();
+  neptune->m_translate = glm::vec3(16.0f, 0.0f, 16.0f);
+  neptune->m_scale = glm::vec3(0.050f);
+  neptune->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
+  neptune->create(m_program, "Sun.obj");
+  m_planets.push_back(*neptune);
 
   // Get location of uniform variables
   m_viewMatrixLocation = abcg::glGetUniformLocation(m_program, "viewMatrix");
   m_projMatrixLocation = abcg::glGetUniformLocation(m_program, "projMatrix");
   m_modelMatrixLocation = abcg::glGetUniformLocation(m_program, "modelMatrix");
   m_colorLocation = abcg::glGetUniformLocation(m_program, "color");
-
-  /*// Load model
-  loadModelFromFile(assetsPath + "bunny.obj");
-
-  // Generate VBO
-  abcg::glGenBuffers(1, &m_VBO);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  abcg::glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(m_vertices.at(0)) * m_vertices.size(),
-                     m_vertices.data(), GL_STATIC_DRAW);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // Generate EBO
-  abcg::glGenBuffers(1, &m_EBO);
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     sizeof(m_indices.at(0)) * m_indices.size(),
-                     m_indices.data(), GL_STATIC_DRAW);
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  // Create VAO
-  abcg::glGenVertexArrays(1, &m_VAO);
-
-  // Bind vertex attributes to current VAO
-  abcg::glBindVertexArray(m_VAO);
-
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  auto const positionAttribute{
-      abcg::glGetAttribLocation(m_program, "inPosition")};
-  abcg::glEnableVertexAttribArray(positionAttribute);
-  abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(Vertex), nullptr);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-
-  // End of binding to current VAO
-  abcg::glBindVertexArray(0);*/
-}
-
-void Window::loadModelFromFile(std::string_view path) {
-  /*tinyobj::ObjReader reader;
-
-  if (!reader.ParseFromFile(path.data())) {
-    if (!reader.Error().empty()) {
-      throw abcg::RuntimeError(
-          fmt::format("Failed to load model {} ({})", path, reader.Error()));
-    }
-    throw abcg::RuntimeError(fmt::format("Failed to load model {}", path));
-  }
-
-  if (!reader.Warning().empty()) {
-    fmt::print("Warning: {}\n", reader.Warning());
-  }
-
-  auto const &attributes{reader.GetAttrib()};
-  auto const &shapes{reader.GetShapes()};
-
-  m_vertices.clear();
-  m_indices.clear();
-
-  // A key:value map with key=Vertex and value=index
-  std::unordered_map<Vertex, GLuint> hash{};
-
-  // Loop over shapes
-  for (auto const &shape : shapes) {
-    // Loop over indices
-    for (auto const offset : iter::range(shape.mesh.indices.size())) {
-      // Access to vertex
-      auto const index{shape.mesh.indices.at(offset)};
-
-      // Vertex position
-      auto const startIndex{3 * index.vertex_index};
-      auto const vx{attributes.vertices.at(startIndex + 0)};
-      auto const vy{attributes.vertices.at(startIndex + 1)};
-      auto const vz{attributes.vertices.at(startIndex + 2)};
-
-      Vertex const vertex{.position = {vx, vy, vz}};
-
-      // If map doesn't contain this vertex
-      if (!hash.contains(vertex)) {
-        // Add this index (size of m_vertices)
-        hash[vertex] = m_vertices.size();
-        // Add this vertex
-        m_vertices.push_back(vertex);
-      }
-
-      m_indices.push_back(hash[vertex]);
-    }
-  }*/
 }
 
 void Window::onPaint() {
@@ -184,133 +154,9 @@ void Window::onPaint() {
   abcg::glUniformMatrix4fv(m_projMatrixLocation, 1, GL_FALSE,
                            &m_camera.getProjMatrix()[0][0]);
 
-  abcg::glBindVertexArray(m_VAO);
-
-  // Draw white bunny
-  glm::mat4 model{1.0f};
-  /*model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0, 1, 0));
-  model = glm::scale(model, glm::vec3(0.5f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
-  abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
-                       nullptr);
-
-  // Draw yellow bunny
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-  model = glm::scale(model, glm::vec3(0.5f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
-                       nullptr);
-
-  // Draw blue bunny
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0, 1, 0));
-  model = glm::scale(model, glm::vec3(0.5f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
-                       nullptr);*/
-
-  // Draw red bunny
-  /*model = glm::mat4(1.0);
-  model = glm::scale(model, glm::vec3(0.1f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
-  abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
-                       nullptr);*/
-
-  abcg::glBindVertexArray(0);
-
-  // Draw sun
-  model = glm::mat4(1.0);
-  model = glm::scale(model, glm::vec3(0.1f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
-  m_sun.paint(m_program, m_camera);
-
-  // Draw earth
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(6.0f, 0.0f, 6.0f));
-  model = glm::scale(model, glm::vec3(0.07f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_earth.paint(m_program, m_camera);
-
-  // Draw mercury
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(2.0f, 0.0f, 2.0f));
-  model = glm::scale(model, glm::vec3(0.025f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_mercury.paint(m_program, m_camera);
-
-  // Draw venus
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(4.0f, 0.0f, 4.0f));
-  model = glm::scale(model, glm::vec3(0.04f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_venus.paint(m_program, m_camera);
-
-  // Draw Mars
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(8.0f, 0.0f, 8.0f));
-  model = glm::scale(model, glm::vec3(0.07f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
-  m_mars.paint(m_program, m_camera);
-
-  // Draw Jupiter
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-  model = glm::scale(model, glm::vec3(0.1f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_jupiter.paint(m_program, m_camera);
-
-  // Draw Saturn
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(12.0f, 0.0f, 12.0f));
-  model = glm::scale(model, glm::vec3(0.085f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_saturn.paint(m_program, m_camera);
-
-  // Draw Uranus
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(14.0f, 0.0f, 14.0f));
-  model = glm::scale(model, glm::vec3(0.055f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_uranus.paint(m_program, m_camera);
-
-  // Draw Neptune
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(16.0f, 0.0f, 16.0f));
-  model = glm::scale(model, glm::vec3(0.050f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_neptune.paint(m_program, m_camera);
-
-  // Draw ground
-  // m_ground.paint();
+  // m_earth.paint(m_program, m_camera);
+  for (auto planet : m_planets)
+    planet.paint();
 
   abcg::glUseProgram(0);
 }
@@ -323,8 +169,6 @@ void Window::onResize(glm::ivec2 const &size) {
 }
 
 void Window::onDestroy() {
-  m_ground.destroy();
-
   abcg::glDeleteProgram(m_program);
   abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteBuffers(1, &m_VBO);

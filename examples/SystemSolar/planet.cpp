@@ -1,23 +1,20 @@
-#include "mercury.hpp"
+#include "planet.hpp"
 
 // Explicit specialization of std::hash for Vertex
-template <> struct std::hash<VertexMercury> {
-  size_t operator()(VertexMercury const &vertexMercury) const noexcept {
-    auto const h1{std::hash<glm::vec3>()(vertexMercury.position)};
+template <> struct std::hash<VertexPlanet> {
+  size_t operator()(VertexPlanet const &vertexPlanet) const noexcept {
+    auto const h1{std::hash<glm::vec3>()(vertexPlanet.position)};
     return h1;
   }
 };
 
-void Mercury::create(GLuint program) {
+void Planet::create(GLuint program, std::string nameFile) {
 
   auto const &assetsPath{abcg::Application::getAssetsPath()};
-  
-
 
   // Load model
-  loadModelFromFile(assetsPath + "Sun.obj");
-  
-  
+  loadModelFromFile(assetsPath + nameFile);
+
   // Generate VBO
   abcg::glGenBuffers(1, &m_VBO);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
@@ -45,16 +42,20 @@ void Mercury::create(GLuint program) {
       abcg::glGetAttribLocation(program, "inPosition")};
   abcg::glEnableVertexAttribArray(positionAttribute);
   abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(VertexMercury), nullptr);
+                              sizeof(VertexPlanet), nullptr);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
   // End of binding to current VAO
   abcg::glBindVertexArray(0);
+
+  // Save location of uniform variables
+  m_modelMatrixLoc = abcg::glGetUniformLocation(program, "modelMatrix");
+  m_colorLoc = abcg::glGetUniformLocation(program, "color");
 }
 
-void Mercury::loadModelFromFile(std::string_view path) {
+void Planet::loadModelFromFile(std::string_view path) {
   tinyobj::ObjReader reader;
 
   if (!reader.ParseFromFile(path.data())) {
@@ -76,7 +77,7 @@ void Mercury::loadModelFromFile(std::string_view path) {
   m_indices.clear();
 
   // A key:value map with key=Vertex and value=index
-  std::unordered_map<VertexMercury, GLuint> hash{};
+  std::unordered_map<VertexPlanet, GLuint> hash{};
 
   // Loop over shapes
   for (auto const &shape : shapes) {
@@ -91,57 +92,36 @@ void Mercury::loadModelFromFile(std::string_view path) {
       auto const vy{attributes.vertices.at(startIndex + 1)};
       auto const vz{attributes.vertices.at(startIndex + 2)};
 
-      VertexMercury const vertexMercury{.position = {vx, vy, vz}};
+      VertexPlanet const vertexPlanet{.position = {vx, vy, vz}};
 
       // If map doesn't contain this vertex
-      if (!hash.contains(vertexMercury)) {
+      if (!hash.contains(vertexPlanet)) {
         // Add this index (size of m_vertices)
-        hash[vertexMercury] = m_vertices.size();
+        hash[vertexPlanet] = m_vertices.size();
         // Add this vertex
-        m_vertices.push_back(vertexMercury);
+        m_vertices.push_back(vertexPlanet);
       }
 
-      m_indices.push_back(hash[vertexMercury]);
+      m_indices.push_back(hash[vertexPlanet]);
     }
   }
 }
 
-void Mercury::paint( GLint program, Camera m_camera) {
-  
-  // Get location of uniform variables
-  m_viewMatrixLocation = abcg::glGetUniformLocation(m_program, "viewMatrix");
-  m_projMatrixLocation = abcg::glGetUniformLocation(m_program, "projMatrix");
-  m_modelMatrixLocation = abcg::glGetUniformLocation(m_program, "modelMatrix");
-  m_colorLocation = abcg::glGetUniformLocation(m_program, "color");
-
-  abcg::glUseProgram(program);
-
-  // Set uniform variables for viewMatrix and projMatrix
-  // These matrices are used for every scene object
-  /*abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE,
-                           &m_camera.getViewMatrix()[0][0]);
-  abcg::glUniformMatrix4fv(m_projMatrixLocation, 1, GL_FALSE,
-                           &m_camera.getProjMatrix()[0][0]);*/
-
+void Planet::paint() {
   abcg::glBindVertexArray(m_VAO);
+  glm::mat4 model{1.0f};
+  model = glm::translate(model, m_translate);
+  model = glm::scale(model, m_scale);
 
-  // Draw Mercury
-  /*glm::mat4 model{1.0f};
-  model = glm::mat4(1.0);
-  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
-  model = glm::scale(model, glm::vec3(0.5f));
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
-  abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);*/
+  abcg::glUniformMatrix4fv(m_modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
+  abcg::glUniform4f(m_colorLoc, m_color[0], m_color[1], m_color[2], m_color[3]);
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
                        nullptr);
 
   abcg::glBindVertexArray(0);
-
-
 }
 
-void Mercury::destroy() {
+void Planet::destroy() {
   abcg::glDeleteBuffers(1, &m_VBO);
   abcg::glDeleteVertexArrays(1, &m_VAO);
 }
