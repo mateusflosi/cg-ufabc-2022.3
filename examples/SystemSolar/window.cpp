@@ -71,7 +71,7 @@ void Window::onCreate() {
   m_saturn.create(m_program);
   m_uranus.create(m_program);
   m_neptune.create(m_program);
-  
+
   // Get location of uniform variables
   m_viewMatrixLocation = abcg::glGetUniformLocation(m_program, "viewMatrix");
   m_projMatrixLocation = abcg::glGetUniformLocation(m_program, "projMatrix");
@@ -226,19 +226,17 @@ void Window::onPaint() {
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
                        nullptr);*/
-                       
-  
 
   abcg::glBindVertexArray(0);
-  
+
   // Draw sun
   model = glm::mat4(1.0);
   model = glm::scale(model, glm::vec3(0.1f));
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
-  m_sun.paint(m_program,m_camera);
-  
+  m_sun.paint(m_program, m_camera);
+
   // Draw earth
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(6.0f, 0.0f, 6.0f));
@@ -246,8 +244,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_earth.paint(m_program,m_camera);
-  
+  m_earth.paint(m_program, m_camera);
+
   // Draw mercury
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(2.0f, 0.0f, 2.0f));
@@ -255,8 +253,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_mercury.paint(m_program,m_camera);
-  
+  m_mercury.paint(m_program, m_camera);
+
   // Draw venus
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(4.0f, 0.0f, 4.0f));
@@ -264,8 +262,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_venus.paint(m_program,m_camera);
-  
+  m_venus.paint(m_program, m_camera);
+
   // Draw Mars
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(8.0f, 0.0f, 8.0f));
@@ -273,9 +271,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.25f, 0.25f, 1.0f);
-  m_mars.paint(m_program,m_camera);
-  
-  
+  m_mars.paint(m_program, m_camera);
+
   // Draw Jupiter
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
@@ -283,8 +280,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 1.0f, 0.8f, 0.0f, 1.0f);
-  m_jupiter.paint(m_program,m_camera);
-  
+  m_jupiter.paint(m_program, m_camera);
+
   // Draw Saturn
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(12.0f, 0.0f, 12.0f));
@@ -292,9 +289,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_saturn.paint(m_program,m_camera);
-  
-  
+  m_saturn.paint(m_program, m_camera);
+
   // Draw Uranus
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(14.0f, 0.0f, 14.0f));
@@ -302,8 +298,8 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_uranus.paint(m_program,m_camera);
-  
+  m_uranus.paint(m_program, m_camera);
+
   // Draw Neptune
   model = glm::mat4(1.0);
   model = glm::translate(model, glm::vec3(16.0f, 0.0f, 16.0f));
@@ -311,12 +307,11 @@ void Window::onPaint() {
 
   abcg::glUniformMatrix4fv(m_modelMatrixLocation, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLocation, 0.0f, 0.8f, 1.0f, 1.0f);
-  m_neptune.paint(m_program,m_camera);
-  
-  
+  m_neptune.paint(m_program, m_camera);
+
   // Draw ground
-  //m_ground.paint();
-  
+  // m_ground.paint();
+
   abcg::glUseProgram(0);
 }
 
