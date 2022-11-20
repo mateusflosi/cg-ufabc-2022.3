@@ -107,10 +107,11 @@ void Planet::loadModelFromFile(std::string_view path) {
   }
 }
 
-void Planet::paint() {
+void Planet::paint(float m_angle) {
   abcg::glBindVertexArray(m_VAO);
   glm::mat4 model{1.0f};
-  model = glm::translate(model, m_translate);
+  model = glm::translate(
+      model, m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}));
   model = glm::scale(model, m_scale);
 
   abcg::glUniformMatrix4fv(m_modelMatrixLoc, 1, GL_FALSE, &model[0][0]);

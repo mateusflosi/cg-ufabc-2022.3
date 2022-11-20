@@ -12,12 +12,14 @@ struct VertexPlanet {
 class Planet {
 public:
   void create(GLuint program, std::string nameFile);
-  void paint();
+  void paint(float m_angle);
+  void update(float deltaTime);
   void destroy();
 
   glm::vec3 m_translate = glm::vec3(.0f);
   glm::vec3 m_scale = glm::vec3(.0f);
   glm::vec4 m_color = glm::vec4(.0f);
+  float m_velocity{0.0f};
 
 private:
   GLuint m_VAO{};

@@ -39,6 +39,7 @@ private:
   float m_dollySpeed{};
   float m_truckSpeed{};
   float m_panSpeed{};
+  float m_angle_planet{};
 
   std::vector<Planet> m_planets;
 };

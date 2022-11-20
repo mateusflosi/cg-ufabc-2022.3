@@ -66,6 +66,7 @@ void Window::onCreate() {
   sun->m_scale = glm::vec3(0.1f);
   sun->m_color = glm::vec4(1.0f, 0.25f, 0.25f, 1.0f);
   sun->create(m_program, "Sun.obj");
+  sun->m_velocity = 0.0f;
   m_planets.push_back(*sun);
 
   // create mercurio
@@ -74,6 +75,7 @@ void Window::onCreate() {
   mercurio->m_scale = glm::vec3(0.025f);
   mercurio->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   mercurio->create(m_program, "Sun.obj");
+  mercurio->m_velocity = 1.0f;
   m_planets.push_back(*mercurio);
 
   // create venus
@@ -82,6 +84,7 @@ void Window::onCreate() {
   venus->m_scale = glm::vec3(0.04f);
   venus->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   venus->create(m_program, "Sun.obj");
+  venus->m_velocity = 0.9f;
   m_planets.push_back(*venus);
 
   // create eart
@@ -90,6 +93,7 @@ void Window::onCreate() {
   earth->m_scale = glm::vec3(0.07f);
   earth->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   earth->create(m_program, "earth_new.obj");
+  earth->m_velocity = 0.8f;
   m_planets.push_back(*earth);
 
   // create mars
@@ -98,6 +102,7 @@ void Window::onCreate() {
   mars->m_scale = glm::vec3(0.07f);
   mars->m_color = glm::vec4(1.0f, 0.25f, 0.25f, 1.0f);
   mars->create(m_program, "Sun.obj");
+  mars->m_velocity = 0.7f;
   m_planets.push_back(*mars);
 
   // create jupiter
@@ -106,6 +111,7 @@ void Window::onCreate() {
   jupiter->m_scale = glm::vec3(0.1f);
   jupiter->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   jupiter->create(m_program, "Sun.obj");
+  jupiter->m_velocity = 0.6f;
   m_planets.push_back(*jupiter);
 
   // create saturn
@@ -114,6 +120,7 @@ void Window::onCreate() {
   saturn->m_scale = glm::vec3(0.085f);
   saturn->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   saturn->create(m_program, "Sun.obj");
+  saturn->m_velocity = 0.5f;
   m_planets.push_back(*saturn);
 
   // create uranus
@@ -122,6 +129,7 @@ void Window::onCreate() {
   uranus->m_scale = glm::vec3(0.055f);
   uranus->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   uranus->create(m_program, "Sun.obj");
+  uranus->m_velocity = 0.4f;
   m_planets.push_back(*uranus);
 
   // create neptune
@@ -130,6 +138,7 @@ void Window::onCreate() {
   neptune->m_scale = glm::vec3(0.050f);
   neptune->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   neptune->create(m_program, "Sun.obj");
+  neptune->m_velocity = 0.3f;
   m_planets.push_back(*neptune);
 
   // Get location of uniform variables
@@ -156,7 +165,7 @@ void Window::onPaint() {
 
   // m_earth.paint(m_program, m_camera);
   for (auto planet : m_planets)
-    planet.paint();
+    planet.paint(planet.m_velocity * m_angle_planet);
 
   abcg::glUseProgram(0);
 }
@@ -173,10 +182,14 @@ void Window::onDestroy() {
   abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteBuffers(1, &m_VBO);
   abcg::glDeleteVertexArrays(1, &m_VAO);
+
+  for (auto planet : m_planets)
+    planet.destroy();
 }
 
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
+  m_angle_planet += deltaTime;
 
   // Update LookAt camera
   m_camera.dolly(m_dollySpeed * deltaTime);
