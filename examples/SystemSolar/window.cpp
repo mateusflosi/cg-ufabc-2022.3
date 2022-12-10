@@ -183,12 +183,22 @@ void Window::onPaint() {
 
   // m_earth.paint(m_program, m_camera);
   for (auto planet : m_planets)
-    planet.paint(planet.m_velocity * m_angle_planet);
+    planet.paint(planet.m_velocity * m_angle_planet * m_planet_velocity);
 
   abcg::glUseProgram(0);
 }
 
-void Window::onPaintUI() { abcg::OpenGLWindow::onPaintUI(); }
+void Window::onPaintUI() {
+  abcg::OpenGLWindow::onPaintUI();
+  {
+    ImGui::SetNextWindowSize(ImVec2(300, 60));
+    // Window begin
+    ImGui::Begin("Configurações do usuário");
+    ImGui::SliderFloat("velocidade", &m_planet_velocity, 0.0f, 100.0f);
+
+    ImGui::End();
+  }
+}
 
 void Window::onResize(glm::ivec2 const &size) {
   m_viewportSize = size;

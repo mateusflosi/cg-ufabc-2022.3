@@ -42,6 +42,7 @@ private:
   float m_panSpeed{};
   float m_panXSpeed{};
   float m_angle_planet{};
+  float m_planet_velocity{10.0f};
 
   std::vector<Planet> m_planets;
 };
