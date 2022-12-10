@@ -20,10 +20,18 @@ void Window::onEvent(SDL_Event const &event) {
       m_panSpeed = -1.0f;
     if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d)
       m_panSpeed = 1.0f;
+    if (event.key.keysym.sym == SDLK_r)
+      m_panXSpeed = -1.0f;
+    if (event.key.keysym.sym == SDLK_f)
+      m_panXSpeed = 1.0f;
     if (event.key.keysym.sym == SDLK_q)
       m_truckSpeed = -1.0f;
     if (event.key.keysym.sym == SDLK_e)
       m_truckSpeed = 1.0f;
+    if (event.key.keysym.sym == SDLK_t)
+      m_truckXSpeed = -1.0f;
+    if (event.key.keysym.sym == SDLK_g)
+      m_truckXSpeed = 1.0f;
   }
   if (event.type == SDL_KEYUP) {
     if ((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w) &&
@@ -39,10 +47,18 @@ void Window::onEvent(SDL_Event const &event) {
          event.key.keysym.sym == SDLK_d) &&
         m_panSpeed > 0)
       m_panSpeed = 0.0f;
+    if (event.key.keysym.sym == SDLK_r && m_panXSpeed < 0)
+      m_panXSpeed = 0.0f;
+    if (event.key.keysym.sym == SDLK_f && m_panXSpeed > 0)
+      m_panXSpeed = 0.0f;
     if (event.key.keysym.sym == SDLK_q && m_truckSpeed < 0)
       m_truckSpeed = 0.0f;
     if (event.key.keysym.sym == SDLK_e && m_truckSpeed > 0)
       m_truckSpeed = 0.0f;
+    if (event.key.keysym.sym == SDLK_t && m_truckXSpeed < 0)
+      m_truckXSpeed = 0.0f;
+    if (event.key.keysym.sym == SDLK_g && m_truckXSpeed > 0)
+      m_truckXSpeed = 0.0f;
   }
 }
 
@@ -194,5 +210,7 @@ void Window::onUpdate() {
   // Update LookAt camera
   m_camera.dolly(m_dollySpeed * deltaTime);
   m_camera.truck(m_truckSpeed * deltaTime);
+  m_camera.truckX(m_truckXSpeed * deltaTime);
   m_camera.pan(m_panSpeed * deltaTime);
+  m_camera.panX(m_panXSpeed * deltaTime);
 }

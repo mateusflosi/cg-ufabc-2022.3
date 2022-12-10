@@ -36,12 +36,38 @@ void Camera::truck(float speed) {
   computeViewMatrix();
 }
 
+void Camera::truckX(float speed) {
+  // Compute forward vector (view direction)
+  auto const forward{glm::normalize(m_at - m_eye)};
+  // Compute vector to the left
+  auto const left{glm::cross({1.0f, 0.0f, 0.0f}, forward)};
+
+  // Move eye and center to the left (speed < 0) or to the right (speed > 0)
+  m_at -= left * speed;
+  m_eye -= left * speed;
+
+  computeViewMatrix();
+}
+
 void Camera::pan(float speed) {
   glm::mat4 transform{1.0f};
 
   // Rotate camera around its local y axis
   transform = glm::translate(transform, m_eye);
   transform = glm::rotate(transform, -speed, m_up);
+  transform = glm::translate(transform, -m_eye);
+
+  m_at = transform * glm::vec4(m_at, 1.0f);
+
+  computeViewMatrix();
+}
+
+void Camera::panX(float speed) {
+  glm::mat4 transform{1.0f};
+
+  // Rotate camera around its local x axis
+  transform = glm::translate(transform, m_eye);
+  transform = glm::rotate(transform, -speed, {1.0f, 0.0f, 0.0f});
   transform = glm::translate(transform, -m_eye);
 
   m_at = transform * glm::vec4(m_at, 1.0f);
