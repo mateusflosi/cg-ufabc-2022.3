@@ -43,6 +43,7 @@ private:
   float m_panXSpeed{};
   float m_angle_planet{};
   float m_planet_velocity{10.0f};
+  bool m_planet_distance_scale{true};
 
   std::vector<Planet> m_planets;
 };

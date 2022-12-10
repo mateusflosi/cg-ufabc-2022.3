@@ -109,9 +109,10 @@ void Planet::loadModelFromFile(std::string_view path) {
   }
 }
 
-void Planet::paint(float m_angle) {
+void Planet::paint(float m_angle, bool scale) {
   abcg::glBindVertexArray(m_VAO);
   glm::mat4 model{1.0f};
+  auto const m_translate = scale ? m_translate_scale : m_translate_not_scale;
   model = glm::translate(
       model, m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}));
   model = glm::scale(model, m_scale);
