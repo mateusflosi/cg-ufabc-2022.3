@@ -77,6 +77,8 @@ void Window::onCreate() {
                                  {.source = assetsPath + "lookat.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
 
+  auto const distanceScale = glm::vec3(4.f, 4.f, 4.f);
+
   // create sun
   auto sun = new Planet();
   sun->m_scale = glm::vec3(0.1f);
@@ -87,7 +89,7 @@ void Window::onCreate() {
 
   // create mercurio
   auto mercurio = new Planet();
-  mercurio->m_translate = glm::vec3(2.0f, 0.0f, 2.0f);
+  mercurio->m_translate = glm::vec3(0.3867f, 0.0f, 0.3867f) * distanceScale;
   mercurio->m_scale = glm::vec3(0.025f);
   mercurio->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   mercurio->create(m_program, "Sun.obj");
@@ -96,65 +98,65 @@ void Window::onCreate() {
 
   // create venus
   auto venus = new Planet();
-  venus->m_translate = glm::vec3(4.0f, 0.0f, 4.0f);
+  venus->m_translate = glm::vec3(0.72f, 0.0f, 0.72f) * distanceScale;
   venus->m_scale = glm::vec3(0.04f);
   venus->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   venus->create(m_program, "Sun.obj");
-  venus->m_velocity = 0.9f;
+  venus->m_velocity = 0.39111111f;
   m_planets.push_back(*venus);
 
   // create eart
   auto earth = new Planet();
-  earth->m_translate = glm::vec3(6.0f, 0.0f, 6.0f);
+  earth->m_translate = glm::vec3(0.9933f, 0.0f, 0.9933f) * distanceScale;
   earth->m_scale = glm::vec3(0.07f);
   earth->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   earth->create(m_program, "earth_new.obj");
-  earth->m_velocity = 0.8f;
+  earth->m_velocity = 0.24109589f;
   m_planets.push_back(*earth);
 
   // create mars
   auto mars = new Planet();
-  mars->m_translate = glm::vec3(8.0f, 0.0f, 8.0f);
+  mars->m_translate = glm::vec3(1.5133f, 0.0f, 1.5133f) * distanceScale;
   mars->m_scale = glm::vec3(0.07f);
   mars->m_color = glm::vec4(1.0f, 0.25f, 0.25f, 1.0f);
   mars->create(m_program, "Sun.obj");
-  mars->m_velocity = 0.7f;
+  mars->m_velocity = 0.12809316f;
   m_planets.push_back(*mars);
 
   // create jupiter
   auto jupiter = new Planet();
-  jupiter->m_translate = glm::vec3(10.0f, 0.0f, 10.0f);
+  jupiter->m_translate = glm::vec3(5.18f, 0.0f, 5.18f) * distanceScale;
   jupiter->m_scale = glm::vec3(0.1f);
   jupiter->m_color = glm::vec4(1.0f, 0.8f, 0.0f, 1.0f);
   jupiter->create(m_program, "Sun.obj");
-  jupiter->m_velocity = 0.6f;
+  jupiter->m_velocity = 0.02032849f;
   m_planets.push_back(*jupiter);
 
   // create saturn
   auto saturn = new Planet();
-  saturn->m_translate = glm::vec3(12.0f, 0.0f, 12.0f);
+  saturn->m_translate = glm::vec3(9.5067f, 0.0f, 9.5067f) * distanceScale;
   saturn->m_scale = glm::vec3(0.085f);
   saturn->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   saturn->create(m_program, "Sun.obj");
-  saturn->m_velocity = 0.5f;
+  saturn->m_velocity = 0.00818383f;
   m_planets.push_back(*saturn);
 
   // create uranus
   auto uranus = new Planet();
-  uranus->m_translate = glm::vec3(14.0f, 0.0f, 14.0f);
+  uranus->m_translate = glm::vec3(19.1267f, 0.0f, 19.1267f) * distanceScale;
   uranus->m_scale = glm::vec3(0.055f);
   uranus->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   uranus->create(m_program, "Sun.obj");
-  uranus->m_velocity = 0.4f;
+  uranus->m_velocity = 0.00286885f;
   m_planets.push_back(*uranus);
 
   // create neptune
   auto neptune = new Planet();
-  neptune->m_translate = glm::vec3(16.0f, 0.0f, 16.0f);
+  neptune->m_translate = glm::vec3(29.9733f, 0.0f, 29.9733f) * distanceScale;
   neptune->m_scale = glm::vec3(0.050f);
   neptune->m_color = glm::vec4(0.0f, 0.8f, 1.0f, 1.0f);
   neptune->create(m_program, "Sun.obj");
-  neptune->m_velocity = 0.3f;
+  neptune->m_velocity = 0.00143690f;
   m_planets.push_back(*neptune);
 
   // Get location of uniform variables
