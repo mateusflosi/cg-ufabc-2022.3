@@ -19,8 +19,8 @@ public:
   glm::mat4 const &getProjMatrix() const { return m_projMatrix; }
 
 private:
-  glm::vec3 m_eye{-3.0f, 0.5f, 17.0f}; // Camera position
-  glm::vec3 m_at{-1.25f, 0.5f, 15.0f}; // Look-at point
+  glm::vec3 m_eye{6.35f, 7.3f, 24.0f}; // Camera position
+  glm::vec3 m_at{5.8f, 6.4f, 21.6f};   // Look-at point
   glm::vec3 m_up{0.0f, 1.0f, 0.0f};    // "up" direction
   // Matrix to change from world space to camera space
   glm::mat4 m_viewMatrix;
