@@ -169,12 +169,6 @@ void Window::onCreate() {
   neptune->create(m_program, "Sun.obj");
   neptune->m_velocity = 0.00143690f;
   m_planets.push_back(*neptune);
-
-  // Get location of uniform variables
-  m_viewMatrixLocation = abcg::glGetUniformLocation(m_program, "viewMatrix");
-  m_projMatrixLocation = abcg::glGetUniformLocation(m_program, "projMatrix");
-  m_modelMatrixLocation = abcg::glGetUniformLocation(m_program, "modelMatrix");
-  m_colorLocation = abcg::glGetUniformLocation(m_program, "color");
 }
 
 void Window::onPaint() {
@@ -183,21 +177,11 @@ void Window::onPaint() {
 
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 
-  abcg::glUseProgram(m_program);
-
-  // Set uniform variables for viewMatrix and projMatrix
-  // These matrices are used for every scene object
-  abcg::glUniformMatrix4fv(m_viewMatrixLocation, 1, GL_FALSE,
-                           &m_camera.getViewMatrix()[0][0]);
-  abcg::glUniformMatrix4fv(m_projMatrixLocation, 1, GL_FALSE,
-                           &m_camera.getProjMatrix()[0][0]);
-
   // m_earth.paint(m_program, m_camera);
   for (auto planet : m_planets)
-    planet.paint(planet.m_velocity * m_angle_planet * m_planet_velocity,
+    planet.paint(m_program, m_camera,
+                 planet.m_velocity * m_angle_planet * m_planet_velocity,
                  m_planet_distance_scale);
-
-  abcg::glUseProgram(0);
 }
 
 void Window::onPaintUI() {

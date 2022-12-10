@@ -2,6 +2,7 @@
 #define PLANET_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "camera.hpp"
 
 struct VertexPlanet {
   glm::vec3 position;
@@ -12,7 +13,7 @@ struct VertexPlanet {
 class Planet {
 public:
   void create(GLuint program, std::string nameFile);
-  void paint(float m_angle, bool scale);
+  void paint(GLuint program, Camera camera, float m_angle, bool scale);
   void update(float deltaTime);
   void destroy();
 
@@ -27,6 +28,8 @@ private:
   GLuint m_VBO{};
   GLuint m_EBO{};
 
+  GLint m_viewMatrixLoc{};
+  GLint m_projMatrixLoc{};
   GLint m_modelMatrixLoc{};
   GLint m_colorLoc{};
 

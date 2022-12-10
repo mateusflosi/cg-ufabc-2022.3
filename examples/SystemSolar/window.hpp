@@ -30,11 +30,6 @@ private:
   GLuint m_EBO{};
   GLuint m_program{};
 
-  GLint m_viewMatrixLocation{};
-  GLint m_projMatrixLocation{};
-  GLint m_modelMatrixLocation{};
-  GLint m_colorLocation{};
-
   Camera m_camera;
   float m_dollySpeed{};
   float m_truckSpeed{};

@@ -1,5 +1,6 @@
 #include "planet.hpp"
 
+#include "camera.hpp"
 #include <unordered_map>
 
 // Explicit specialization of std::hash for Vertex
@@ -53,6 +54,8 @@ void Planet::create(GLuint program, std::string nameFile) {
   abcg::glBindVertexArray(0);
 
   // Save location of uniform variables
+  m_viewMatrixLoc = abcg::glGetUniformLocation(program, "viewMatrix");
+  m_projMatrixLoc = abcg::glGetUniformLocation(program, "projMatrix");
   m_modelMatrixLoc = abcg::glGetUniformLocation(program, "modelMatrix");
   m_colorLoc = abcg::glGetUniformLocation(program, "color");
 }
@@ -109,7 +112,16 @@ void Planet::loadModelFromFile(std::string_view path) {
   }
 }
 
-void Planet::paint(float m_angle, bool scale) {
+void Planet::paint(GLuint program, Camera camera, float m_angle, bool scale) {
+  abcg::glUseProgram(program);
+
+  // Set uniform variables for viewMatrix and projMatrix
+  // These matrices are used for every scene object
+  abcg::glUniformMatrix4fv(m_viewMatrixLoc, 1, GL_FALSE,
+                           &camera.getViewMatrix()[0][0]);
+  abcg::glUniformMatrix4fv(m_projMatrixLoc, 1, GL_FALSE,
+                           &camera.getProjMatrix()[0][0]);
+
   abcg::glBindVertexArray(m_VAO);
   glm::mat4 model{1.0f};
   auto const m_translate = scale ? m_translate_scale : m_translate_not_scale;
@@ -123,6 +135,8 @@ void Planet::paint(float m_angle, bool scale) {
                        nullptr);
 
   abcg::glBindVertexArray(0);
+
+  abcg::glUseProgram(0);
 }
 
 void Planet::destroy() {
