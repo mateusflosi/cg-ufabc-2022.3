@@ -206,7 +206,9 @@ void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
   abcg::glUniformMatrix4fv(m_projMatrixLoc, 1, GL_FALSE,
                            &camera.getProjMatrix()[0][0]);
 
-  glm::vec4 m_lightDir{-1.0f, -1.0f, -1.0f, 0.0f};
+  auto const m_translate = scale ? m_translate_scale : m_translate_not_scale;
+  glm::vec4 m_lightDir{
+      m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}), 0.0f};
   glm::vec4 m_Ia{1.0f};
   glm::vec4 m_Id{1.0f};
   glm::vec4 m_Is{1.0f};
@@ -234,7 +236,6 @@ void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
 
   abcg::glBindVertexArray(m_VAO);
   glm::mat4 model{1.0f};
-  auto const m_translate = scale ? m_translate_scale : m_translate_not_scale;
   model = glm::translate(
       model, m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}));
   model = glm::scale(model, m_scale);
