@@ -179,7 +179,7 @@ void Window::onPaint() {
 
   // m_earth.paint(m_program, m_camera);
   for (auto planet : m_planets)
-    planet.paint(m_program, m_camera, m_trackBallLight, m_trackBallModel,
+    planet.paint(m_program, m_camera,
                  planet.m_velocity * m_angle_planet * m_planet_velocity,
                  m_planet_distance_scale);
 }
@@ -200,8 +200,6 @@ void Window::onPaintUI() {
 
 void Window::onResize(glm::ivec2 const &size) {
   m_viewportSize = size;
-  m_trackBallModel.resizeViewport(size);
-  m_trackBallLight.resizeViewport(size);
   m_camera.computeProjectionMatrix(size);
 }
 

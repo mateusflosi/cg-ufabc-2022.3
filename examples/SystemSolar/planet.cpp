@@ -1,7 +1,6 @@
 #include "planet.hpp"
 
 #include "camera.hpp"
-#include "trackball.hpp"
 #include <unordered_map>
 
 // Explicit specialization of std::hash for Vertex
@@ -191,8 +190,7 @@ void Planet::loadModelFromFile(std::string_view path) {
   }
 }
 
-void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
-                   TrackBall trackBallModel, float m_angle, bool scale) {
+void Planet::paint(GLuint program, Camera camera, float m_angle, bool scale) {
   glm::mat4 m_viewMatrix{glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),
                                      glm::vec3(0.0f, 0.0f, 0.0f),
                                      glm::vec3(0.0f, 1.0f, 0.0f))};
@@ -212,14 +210,18 @@ void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
   glm::vec4 m_Ia{1.0f};
   glm::vec4 m_Id{1.0f};
   glm::vec4 m_Is{1.0f};
-  auto const lightDirRotated{trackBallLight.getRotation() * m_lightDir};
+  auto const lightDirRotated{m_lightDir};
   abcg::glUniform4fv(m_lightDirLoc, 1, &lightDirRotated.x);
   abcg::glUniform4fv(m_IaLoc, 1, &m_Ia.x);
   abcg::glUniform4fv(m_IdLoc, 1, &m_Id.x);
   abcg::glUniform4fv(m_IsLoc, 1, &m_Is.x);
 
   // Set uniform variables for the current model
-  glm::mat4 m_modelMatrix = trackBallModel.getRotation();
+  glm::mat4 m_modelMatrix{1.0f};
+  m_modelMatrix = glm::translate(
+      m_modelMatrix,
+      m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}));
+  m_modelMatrix = glm::scale(m_modelMatrix, m_scale);
   glm::vec4 m_Ka{0.1f, 0.1f, 0.1f, 1.0f};
   glm::vec4 m_Kd{0.7f, 0.7f, 0.7f, 1.0f};
   glm::vec4 m_Ks{1.0f};
@@ -235,12 +237,6 @@ void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
   abcg::glUniformMatrix3fv(m_normalMatrixLoc, 1, GL_FALSE, &normalMatrix[0][0]);
 
   abcg::glBindVertexArray(m_VAO);
-  glm::mat4 model{1.0f};
-  model = glm::translate(
-      model, m_translate * glm::vec3({cos(m_angle), .0f, sin(m_angle)}));
-  model = glm::scale(model, m_scale);
-
-  abcg::glUniformMatrix4fv(m_modelMatrixLoc, 1, GL_FALSE, &model[0][0]);
   abcg::glUniform4f(m_colorLoc, m_color[0], m_color[1], m_color[2], m_color[3]);
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT,
                        nullptr);
