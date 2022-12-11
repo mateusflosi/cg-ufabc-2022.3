@@ -52,7 +52,11 @@ void Planet::create(GLuint program, std::string nameFile) {
   // Load model
   loadModelFromFile(assetsPath + nameFile);
 
-  // Generate VBO
+  // Delete previous buffers
+  abcg::glDeleteBuffers(1, &m_EBO);
+  abcg::glDeleteBuffers(1, &m_VBO);
+
+  // VBO
   abcg::glGenBuffers(1, &m_VBO);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
   abcg::glBufferData(GL_ARRAY_BUFFER,
@@ -60,7 +64,7 @@ void Planet::create(GLuint program, std::string nameFile) {
                      m_vertices.data(), GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Generate EBO
+  // EBO
   abcg::glGenBuffers(1, &m_EBO);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
   abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -68,23 +72,37 @@ void Planet::create(GLuint program, std::string nameFile) {
                      m_indices.data(), GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+  // Release previous VAO
+  abcg::glDeleteVertexArrays(1, &m_VAO);
+
   // Create VAO
   abcg::glGenVertexArrays(1, &m_VAO);
-
-  // Bind vertex attributes to current VAO
   abcg::glBindVertexArray(m_VAO);
 
+  // Bind EBO and VBO
+  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+
+  // Bind vertex attributes
   auto const positionAttribute{
       abcg::glGetAttribLocation(program, "inPosition")};
-  abcg::glEnableVertexAttribArray(positionAttribute);
-  abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(VertexPlanet), nullptr);
+  if (positionAttribute >= 0) {
+    abcg::glEnableVertexAttribArray(positionAttribute);
+    abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
+                                sizeof(VertexPlanet), nullptr);
+  }
+
+  auto const normalAttribute{abcg::glGetAttribLocation(program, "inNormal")};
+  if (normalAttribute >= 0) {
+    abcg::glEnableVertexAttribArray(normalAttribute);
+    auto const offset{offsetof(VertexPlanet, normal)};
+    abcg::glVertexAttribPointer(normalAttribute, 3, GL_FLOAT, GL_FALSE,
+                                sizeof(VertexPlanet),
+                                reinterpret_cast<void *>(offset));
+  }
+
+  // End of binding
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-
-  // End of binding to current VAO
   abcg::glBindVertexArray(0);
 
   // Save location of uniform variables
