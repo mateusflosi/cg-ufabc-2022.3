@@ -6,6 +6,7 @@
 
 struct VertexPlanet {
   glm::vec3 position;
+  glm::vec3 normal{};
 
   friend bool operator==(VertexPlanet const &, VertexPlanet const &) = default;
 };
@@ -36,6 +37,9 @@ private:
   std::vector<VertexPlanet> m_vertices;
   std::vector<GLuint> m_indices;
 
+  bool m_hasNormals{false};
+
+  void computeNormals();
   void loadModelFromFile(std::string_view path);
 };
 

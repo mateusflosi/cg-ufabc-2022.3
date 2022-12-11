@@ -7,9 +7,42 @@
 template <> struct std::hash<VertexPlanet> {
   size_t operator()(VertexPlanet const &vertexPlanet) const noexcept {
     auto const h1{std::hash<glm::vec3>()(vertexPlanet.position)};
-    return h1;
+    auto const h2{std::hash<glm::vec3>()(vertexPlanet.normal)};
+    return abcg::hashCombine(h1, h2);
   }
 };
+
+void Planet::computeNormals() {
+  // Clear previous vertex normals
+  for (auto &vertex : m_vertices) {
+    vertex.normal = glm::vec3(0.0f);
+  }
+
+  // Compute face normals
+  for (auto const offset : iter::range(0UL, m_indices.size(), 3UL)) {
+    // Get face vertices
+    auto &a{m_vertices.at(m_indices.at(offset + 0))};
+    auto &b{m_vertices.at(m_indices.at(offset + 1))};
+    auto &c{m_vertices.at(m_indices.at(offset + 2))};
+
+    // Compute normal
+    auto const edge1{b.position - a.position};
+    auto const edge2{c.position - b.position};
+    auto const normal{glm::cross(edge1, edge2)};
+
+    // Accumulate on vertices
+    a.normal += normal;
+    b.normal += normal;
+    c.normal += normal;
+  }
+
+  // Normalize
+  for (auto &vertex : m_vertices) {
+    vertex.normal = glm::normalize(vertex.normal);
+  }
+
+  m_hasNormals = true;
+}
 
 void Planet::create(GLuint program, std::string nameFile) {
 
@@ -75,11 +108,13 @@ void Planet::loadModelFromFile(std::string_view path) {
     fmt::print("Warning: {}\n", reader.Warning());
   }
 
-  auto const &attributes{reader.GetAttrib()};
+  auto const &attrib{reader.GetAttrib()};
   auto const &shapes{reader.GetShapes()};
 
   m_vertices.clear();
   m_indices.clear();
+
+  m_hasNormals = false;
 
   // A key:value map with key=Vertex and value=index
   std::unordered_map<VertexPlanet, GLuint> hash{};
@@ -93,22 +128,40 @@ void Planet::loadModelFromFile(std::string_view path) {
 
       // Vertex position
       auto const startIndex{3 * index.vertex_index};
-      auto const vx{attributes.vertices.at(startIndex + 0)};
-      auto const vy{attributes.vertices.at(startIndex + 1)};
-      auto const vz{attributes.vertices.at(startIndex + 2)};
+      glm::vec3 position{attrib.vertices.at(startIndex + 0),
+                         attrib.vertices.at(startIndex + 1),
+                         attrib.vertices.at(startIndex + 2)};
 
-      VertexPlanet const vertexPlanet{.position = {vx, vy, vz}};
-
-      // If map doesn't contain this vertex
-      if (!hash.contains(vertexPlanet)) {
-        // Add this index (size of m_vertices)
-        hash[vertexPlanet] = m_vertices.size();
-        // Add this vertex
-        m_vertices.push_back(vertexPlanet);
+      // Vertex normal
+      glm::vec3 normal{};
+      if (index.normal_index >= 0) {
+        m_hasNormals = true;
+        auto const normalStartIndex{3 * index.normal_index};
+        normal = {attrib.normals.at(normalStartIndex + 0),
+                  attrib.normals.at(normalStartIndex + 1),
+                  attrib.normals.at(normalStartIndex + 2)};
       }
 
-      m_indices.push_back(hash[vertexPlanet]);
+      VertexPlanet const vertex{.position = position, .normal = normal};
+
+      // If hash doesn't contain this vertex
+      if (!hash.contains(vertex)) {
+        // Add this index (size of m_vertices)
+        hash[vertex] = m_vertices.size();
+        // Add this vertex
+        m_vertices.push_back(vertex);
+      }
+
+      m_indices.push_back(hash[vertex]);
     }
+  }
+
+  /*if (standardize) {
+    Model::standardize();
+  }*/
+
+  if (!m_hasNormals) {
+    computeNormals();
   }
 }
 
@@ -140,6 +193,7 @@ void Planet::paint(GLuint program, Camera camera, float m_angle, bool scale) {
 }
 
 void Planet::destroy() {
+  abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteBuffers(1, &m_VBO);
   abcg::glDeleteVertexArrays(1, &m_VAO);
 }
