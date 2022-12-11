@@ -26,7 +26,7 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 
 <img src="/pages/SystemaSolar/Sistema Solar.jpeg" alt="My cool logo"/>
 
-## Possíveis Melhorias:
+## Possíveis Melhorias
 
 * Adicionar texturização;
 * Movimento de rotação dos planetas, isto é, a movimentação em torno do próprio eixo.
