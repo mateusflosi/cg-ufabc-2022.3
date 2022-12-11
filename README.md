@@ -26,7 +26,7 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 
 <img src="/pages/SystemaSolar/Sistema Solar.jpeg" alt="My cool logo"/>
 
-## Póssiveis Melhorias:
+## Possíveis Melhorias:
 
 * Adicionar texturização;
 * Movimento de rotação dos planetas, isto é, a movimentação em torno do próprio eixo.
@@ -36,13 +36,13 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 ### Kaio 
 * Confecção do código inicial da cena, sem abstração das classes;
 * Adição dos arquivos de planetas na cena;
-* Adição da lógica de rotação dos planetas.
-* Adição dos obj para cada astro.
+* Adição da lógica de rotação dos planetas;
+* Adição dos obj para cada astro;
 
 ### Mateus
 * Ajustes nas configurações da câmera, posição inicial e perspectiva;
-* Abstração de todos os planetas, que inicialmente estavam em objetos separados, para a classe Planeta. Passando toda a lógica de renderização referente aos planetas para dentro da classe, inicialmente estava parte no Window e parte nas classes individuais dos planetas.
-* Movimentos adicionais da camera.
-* Adição de escala ao sistema.
-* Configurações do usuário.
-* Implementação do sol como fonte de luz.
+* Abstração de todos os planetas, que inicialmente estavam em objetos separados, para a classe Planeta. Passando toda a lógica de renderização referente aos planetas para dentro da classe, inicialmente estava parte no Window e parte nas classes individuais dos planetas;
+* Movimentos adicionais da camera;
+* Adição de escala ao sistema;
+* Configurações do usuário;
+* Implementação do sol como fonte de luz;
