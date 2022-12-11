@@ -3,6 +3,7 @@
 
 #include "abcgOpenGL.hpp"
 #include "camera.hpp"
+#include "trackball.hpp"
 
 struct VertexPlanet {
   glm::vec3 position;
@@ -14,7 +15,8 @@ struct VertexPlanet {
 class Planet {
 public:
   void create(GLuint program, std::string nameFile);
-  void paint(GLuint program, Camera camera, float m_angle, bool scale);
+  void paint(GLuint program, Camera camera, TrackBall trackBall,
+             TrackBall trackBallModel, float m_angle, bool scale);
   void update(float deltaTime);
   void destroy();
 
@@ -33,6 +35,15 @@ private:
   GLint m_projMatrixLoc{};
   GLint m_modelMatrixLoc{};
   GLint m_colorLoc{};
+  GLint m_normalMatrixLoc{};
+  GLint m_lightDirLoc{};
+  GLint m_shininessLoc{};
+  GLint m_IaLoc{};
+  GLint m_IdLoc{};
+  GLint m_IsLoc{};
+  GLint m_KaLoc{};
+  GLint m_KdLoc{};
+  GLint m_KsLoc{};
 
   std::vector<VertexPlanet> m_vertices;
   std::vector<GLuint> m_indices;

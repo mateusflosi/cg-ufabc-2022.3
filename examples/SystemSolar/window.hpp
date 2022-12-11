@@ -5,6 +5,7 @@
 
 #include "camera.hpp"
 #include "planet.hpp"
+#include "trackball.hpp"
 
 struct Vertex {
   glm::vec3 position;
@@ -31,6 +32,9 @@ private:
   GLuint m_program{};
 
   Camera m_camera;
+  TrackBall m_trackBallModel;
+  TrackBall m_trackBallLight;
+
   float m_dollySpeed{};
   float m_truckSpeed{};
   float m_truckXSpeed{};

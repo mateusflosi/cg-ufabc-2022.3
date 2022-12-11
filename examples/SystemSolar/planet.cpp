@@ -1,6 +1,7 @@
 #include "planet.hpp"
 
 #include "camera.hpp"
+#include "trackball.hpp"
 #include <unordered_map>
 
 // Explicit specialization of std::hash for Vertex
@@ -91,6 +92,15 @@ void Planet::create(GLuint program, std::string nameFile) {
   m_projMatrixLoc = abcg::glGetUniformLocation(program, "projMatrix");
   m_modelMatrixLoc = abcg::glGetUniformLocation(program, "modelMatrix");
   m_colorLoc = abcg::glGetUniformLocation(program, "color");
+  m_normalMatrixLoc = abcg::glGetUniformLocation(program, "normalMatrix");
+  m_lightDirLoc = abcg::glGetUniformLocation(program, "lightDirWorldSpace");
+  m_shininessLoc = abcg::glGetUniformLocation(program, "shininess");
+  m_IaLoc = abcg::glGetUniformLocation(program, "Ia");
+  m_IdLoc = abcg::glGetUniformLocation(program, "Id");
+  m_IsLoc = abcg::glGetUniformLocation(program, "Is");
+  m_KaLoc = abcg::glGetUniformLocation(program, "Ka");
+  m_KdLoc = abcg::glGetUniformLocation(program, "Kd");
+  m_KsLoc = abcg::glGetUniformLocation(program, "Ks");
 }
 
 void Planet::loadModelFromFile(std::string_view path) {
@@ -156,16 +166,19 @@ void Planet::loadModelFromFile(std::string_view path) {
     }
   }
 
-  /*if (standardize) {
-    Model::standardize();
-  }*/
+  // Planet::standardize();
 
   if (!m_hasNormals) {
     computeNormals();
   }
 }
 
-void Planet::paint(GLuint program, Camera camera, float m_angle, bool scale) {
+void Planet::paint(GLuint program, Camera camera, TrackBall trackBallLight,
+                   TrackBall trackBallModel, float m_angle, bool scale) {
+  glm::mat4 m_viewMatrix{glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),
+                                     glm::vec3(0.0f, 0.0f, 0.0f),
+                                     glm::vec3(0.0f, 1.0f, 0.0f))};
+
   abcg::glUseProgram(program);
 
   // Set uniform variables for viewMatrix and projMatrix
@@ -174,6 +187,32 @@ void Planet::paint(GLuint program, Camera camera, float m_angle, bool scale) {
                            &camera.getViewMatrix()[0][0]);
   abcg::glUniformMatrix4fv(m_projMatrixLoc, 1, GL_FALSE,
                            &camera.getProjMatrix()[0][0]);
+
+  glm::vec4 m_lightDir{-1.0f, -1.0f, -1.0f, 0.0f};
+  glm::vec4 m_Ia{1.0f};
+  glm::vec4 m_Id{1.0f};
+  glm::vec4 m_Is{1.0f};
+  auto const lightDirRotated{trackBallLight.getRotation() * m_lightDir};
+  abcg::glUniform4fv(m_lightDirLoc, 1, &lightDirRotated.x);
+  abcg::glUniform4fv(m_IaLoc, 1, &m_Ia.x);
+  abcg::glUniform4fv(m_IdLoc, 1, &m_Id.x);
+  abcg::glUniform4fv(m_IsLoc, 1, &m_Is.x);
+
+  // Set uniform variables for the current model
+  glm::mat4 m_modelMatrix = trackBallModel.getRotation();
+  glm::vec4 m_Ka{0.1f, 0.1f, 0.1f, 1.0f};
+  glm::vec4 m_Kd{0.7f, 0.7f, 0.7f, 1.0f};
+  glm::vec4 m_Ks{1.0f};
+  float m_shininess{25.0f};
+  abcg::glUniformMatrix4fv(m_modelMatrixLoc, 1, GL_FALSE, &m_modelMatrix[0][0]);
+  abcg::glUniform4fv(m_KaLoc, 1, &m_Ka.x);
+  abcg::glUniform4fv(m_KdLoc, 1, &m_Kd.x);
+  abcg::glUniform4fv(m_KsLoc, 1, &m_Ks.x);
+  abcg::glUniform1f(m_shininessLoc, m_shininess);
+
+  auto const modelViewMatrix{glm::mat3(m_viewMatrix * m_modelMatrix)};
+  auto const normalMatrix{glm::inverseTranspose(modelViewMatrix)};
+  abcg::glUniformMatrix3fv(m_normalMatrixLoc, 1, GL_FALSE, &normalMatrix[0][0]);
 
   abcg::glBindVertexArray(m_VAO);
   glm::mat4 model{1.0f};

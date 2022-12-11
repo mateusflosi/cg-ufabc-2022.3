@@ -72,9 +72,9 @@ void Window::onCreate() {
 
   // Create program
   m_program =
-      abcg::createOpenGLProgram({{.source = assetsPath + "lookat.vert",
+      abcg::createOpenGLProgram({{.source = assetsPath + "blinnphong.vert",
                                   .stage = abcg::ShaderStage::Vertex},
-                                 {.source = assetsPath + "lookat.frag",
+                                 {.source = assetsPath + "blinnphong.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
 
   auto const distanceScale = glm::vec3(4.f, 4.f, 4.f);
@@ -179,7 +179,7 @@ void Window::onPaint() {
 
   // m_earth.paint(m_program, m_camera);
   for (auto planet : m_planets)
-    planet.paint(m_program, m_camera,
+    planet.paint(m_program, m_camera, m_trackBallLight, m_trackBallModel,
                  planet.m_velocity * m_angle_planet * m_planet_velocity,
                  m_planet_distance_scale);
 }
@@ -200,6 +200,8 @@ void Window::onPaintUI() {
 
 void Window::onResize(glm::ivec2 const &size) {
   m_viewportSize = size;
+  m_trackBallModel.resizeViewport(size);
+  m_trackBallLight.resizeViewport(size);
   m_camera.computeProjectionMatrix(size);
 }
 
