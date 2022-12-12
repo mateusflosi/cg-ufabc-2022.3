@@ -24,7 +24,7 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 * Sol como fonte de luz;
 * Obj para cada astro;
 
-<img src="/pages/SystemaSolar/Sistema Solar2.jpeg" alt="My cool logo"/>
+<img src="/pages/SystemaSolar/Sistema Solar2.png" alt="My cool logo"/>
 
 ## Possíveis Melhorias
 
