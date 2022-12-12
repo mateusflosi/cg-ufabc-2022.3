@@ -24,12 +24,25 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 * Sol como fonte de luz;
 * Obj para cada astro;
 
-<img src="/pages/SystemaSolar/Sistema Solar.jpeg" alt="My cool logo"/>
+<img src="/pages/SystemaSolar/Sistema Solar2.jpeg" alt="My cool logo"/>
 
 ## Possíveis Melhorias
 
 * Adicionar texturização;
 * Movimento de rotação dos planetas, isto é, a movimentação em torno do próprio eixo.
+* Adicionar obj para cada astro.
+
+## Erro na criação de novos planetas de modelo
+
+Foram utilizados diversos materiais obtidos na internet para renderizar os planetas do sistema solar e impedir que todos tenham o mesmo modelo, adicionando novos relevos e diferenciando melhor os planetas, contudo ao encontrarmos modelo 3D o mesmo veio com todos os planetas, ao separar cada planeta em seu respectivo arquivo o mesmo não funcionou corretamente, pois eles tinham algum problema referente a posição no espaço que fazia com que fosse gerado um erro na compilação do programação assim como o descrito a seguir:
+
+Vertex indices out of bounds
+
+Vertex normal indices out of bounds
+
+Vertex texcoord indices out of bounds
+
+Entendemos que se trata de um erro que exigiria muito tempo para correção, e não possuíamos este tempo para arrumá-lo.
 
 ## Contribuições
 
@@ -37,7 +50,6 @@ https://mateusflosi.github.io/cg-ufabc-2022.3/pages/SystemaSolar/
 * Confecção do código inicial da cena, sem abstração das classes;
 * Adição dos arquivos de planetas na cena;
 * Adição da lógica de rotação dos planetas;
-* Adição dos obj para cada astro;
 
 ### Mateus
 * Ajustes nas configurações da câmera, posição inicial e perspectiva;
